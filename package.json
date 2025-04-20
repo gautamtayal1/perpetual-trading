@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "Binomo",
   "private": true,
   "scripts": {
     "build": "turbo run build",
