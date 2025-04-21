@@ -1,5 +1,5 @@
 {
-  "name": "Binomo",
+  "name": "binomo",
   "private": true,
   "scripts": {
     "build": "turbo run build",

@@ -1,0 +1,26 @@
+{
+  "name": "@repo/oracle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "ioredis": "^5.6.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/ws": "^8.18.1"
+  }
+}
