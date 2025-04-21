@@ -1,4 +1,5 @@
 import WebSocket from "ws"
+import { RedisManager } from "@repo/queue"
 
 const STREAM = "btcusdt@trade"
 
@@ -12,8 +13,9 @@ export function startOracle() {
     const price = parseFloat(message.p)
     const timeStamp = message.T
 
-    const payload = JSON.stringify({Symbol: "btcusdt", price, timeStamp})
+    const payload = JSON.stringify({s: "btcusdt", p: price, t: timeStamp})
     console.log(payload)
+    RedisManager.getInstance().publishToChannel("prices:update", payload)
   })
 
   ws.on("error", (error) => console.error("WS Error: ", error))

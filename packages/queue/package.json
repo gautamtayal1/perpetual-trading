@@ -1,11 +1,14 @@
 {
-  "name": "@repo/oracle",
+  "name": "@repo/queue",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "exports": {
+    "." : "./src/index.ts"
+  },
   "scripts": {
-    "dev": "tsx src/index.ts",
     "build": "tsc",
+    "dev": "tsx src/index.ts",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -14,14 +17,9 @@
   "type": "module",
   "dependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@repo/queue": "workspace:*",
+    "bullmq": "^5.49.1",
     "ioredis": "^5.6.1",
-    "tsx": "^4.19.3",
-    "typescript": "^5.8.3",
-    "ws": "^8.18.1"
-  },
-  "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
-    "@types/ws": "^8.18.1"
+    "redis": "^4.7.0",
+    "tsx": "^4.19.3"
   }
 }
