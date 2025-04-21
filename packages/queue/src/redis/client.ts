@@ -8,6 +8,7 @@ export class RedisManager {
     this.client = createClient({
       url: process.env.REDIS_URL
     })
+    this.client.connect()
   }
 
   public static getInstance() {

@@ -1,0 +1,10 @@
+import { WebSocketServer } from "ws"
+import { SubscriptionManager } from "./utils/redisClient.js"
+
+const wss = new WebSocketServer({ port: 8081 })
+
+wss.on("listening", () => {
+  SubscriptionManager.getInstance().subscribe("prices:update")
+  console.log("wss is running on port 8081")
+})
+
