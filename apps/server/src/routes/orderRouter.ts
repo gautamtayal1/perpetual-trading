@@ -5,7 +5,6 @@ const orderRouter: Router = Router();
 orderRouter.post("/create", async (req, res) => {
   try {
     const order = await addToQueue(req.body);
-    console.log(order)
     res.status(201).json(order);
   } catch (error) {
     console.error("Error creating order:", error);

@@ -1,6 +1,6 @@
 import { Orderbook } from "./Orderbook.js"
 import { S3Manager } from "./S3Manager.js"
-import { Order, OrderbookType, UserPosition } from "./types.js"
+import { Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
 
 const ENGINE_KEY = "snapshot.json"
 
@@ -8,10 +8,11 @@ export class Engine {
   public static instance: Engine | null = null
   private orderbook: Orderbook | null
   private userPosition: Map<String, UserPosition> = new Map()
+  private userBalance: Map<String, UserBalance> = new Map()
 
   private constructor() {
     this.orderbook = null
-  }
+  } 
 
   public static getInstance(): Engine {
     if(!this.instance) {
@@ -34,6 +35,11 @@ export class Engine {
             engine.userPosition.set(userId, position)
           }
         }
+        if (snapshot.userBalance) {
+          for(const [userId, balance] of snapshot.userBalance) {
+            engine.userBalance.set(userId, balance)
+          }
+        }
       } else {
         engine.orderbook = new Orderbook([], [], "BTCUSDT")
       }
@@ -45,20 +51,148 @@ export class Engine {
     }
     setInterval(() => {
       engine.saveSnapshot()
-      console.log("Saving snapshot")
-    }, 5000);
+    }, 10000);
     return engine
   }
 
   private async saveSnapshot () {
     const snapshot = {
       orderbook: this.orderbook?.getSnapshot(),
-      userPosition: Array.from(this.userPosition.entries())
+      userPosition: Array.from(this.userPosition.entries()),
+      balance: Array.from(this.userBalance.entries())
     }
     await S3Manager.uploadSnapshot(snapshot, ENGINE_KEY)
   }
 
   processOrder(order: Order) {
+    console.log("engine processing order: ", order)
 
+    switch(order.type) {
+      case "LIMIT-CREATE":
+        try {
+          this.createOrder(
+            order.userId,
+            order.entryPrice,
+            order.quantity,
+            order.side,
+            order.leverage
+          )
+        } catch (error) {
+          console.log(error)
+        }
+
+        break
+      case "LIMIT-CANCEL":
+
+        break
+      case "MARKET-CREATE":
+
+        break
+    }
+  }
+  
+  createOrder(
+    userId: string, 
+    price: number, 
+    quantity: number, 
+    side: OrderSide, 
+    leverage: number
+  ) {
+    console.log("create order entered")
+    this.ensureUser(userId)
+    this.checkAndLockBalance(userId, price, quantity, leverage, side)
+  }
+
+  ensureUser(userId: string) {
+    if (!this.userBalance.has(userId)) {
+      this.userBalance.set(userId, {
+        availableBalance: 100,
+        lockedBalance: 0
+      })
+    }
+    if (!this.userPosition.has(userId)) {
+      this.userPosition.set(userId, {
+        side: null,
+        quantity: 0,
+        entryPrice: 0,
+        margin: 0,
+        unrealizedPnl: 0,
+        liquidatedPrice: 0,
+        market: "BTCUSDT"
+      });
+    }
+  }
+  
+  checkAndLockBalance(
+    userId: string, 
+    price: number, 
+    quantity: number, 
+    leverage: number,
+    side: OrderSide
+  ) {
+    const userPosition = this.userPosition.get(userId)
+    const balance = this.userBalance.get(userId)!
+    
+    if (side === "LONG") {
+      switch (userPosition?.side) {
+        case "LONG" : 
+        const marginRequired = (price * quantity) / leverage
+        if(balance.availableBalance < marginRequired) {
+          throw new Error("Insufficient Balance")
+        }
+          balance.availableBalance -= marginRequired
+          balance.lockedBalance += marginRequired
+        break;
+
+        case "SHORT" : 
+          if (userPosition.quantity < quantity) {
+            const marginRequired = (price * (quantity - userPosition.quantity)) / leverage
+            balance.availableBalance -= marginRequired
+            balance.lockedBalance += marginRequired
+          }
+          
+        break;
+        case null:{
+          const marginRequired = (price * quantity) / leverage
+          if(balance.availableBalance < marginRequired) {
+            throw new Error("Insufficient Balance")
+          }
+          balance.availableBalance -= marginRequired
+          balance.lockedBalance += marginRequired
+          break;
+        }
+          
+      }
+    }
+
+    if (side === "SHORT") {
+      switch (userPosition?.side) {
+        case "SHORT" : 
+        const marginRequired = (price * quantity) / leverage
+        if(balance.availableBalance < marginRequired) {
+          throw new Error("Insufficient Balance")
+        }
+          balance.availableBalance -= marginRequired
+          balance.lockedBalance += marginRequired
+        break;
+
+        case "LONG" : 
+          if (userPosition.quantity < quantity) {
+            const marginRequired = (price * (quantity - userPosition.quantity)) / leverage
+            balance.availableBalance -= marginRequired
+            balance.lockedBalance += marginRequired
+          }
+        break;
+        case null:{
+          const marginRequired = (price * quantity) / leverage
+          if(balance.availableBalance < marginRequired) {
+            throw new Error("Insufficient Balance")
+          }
+          balance.availableBalance -= marginRequired
+          balance.lockedBalance += marginRequired
+          break;
+        }
+      }
+    } 
   }
 }

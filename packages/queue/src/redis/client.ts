@@ -8,7 +8,9 @@ export class RedisManager {
     this.client = createClient({
       url: process.env.REDIS_URL
     })
-    this.client.connect()
+    this.client.connect().catch((err) => {
+      console.error("Redis connection failed: ", err)
+    })
   }
 
   public static getInstance() {

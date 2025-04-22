@@ -1,7 +1,6 @@
 import "dotenv/config";
 import { Worker } from "bullmq";
 import { Engine } from "@repo/engine"
-console.log(process.env.AWS_REGION, process.env.S3_BUCKET_NAME, process.env.S3_ENDPOINT, process.env.AWS_ACCESS_KEY_ID, process.env.AWS_SECRET_ACCESS_KEY)
 
 ;(async() => {
   const engine = await Engine.create()
