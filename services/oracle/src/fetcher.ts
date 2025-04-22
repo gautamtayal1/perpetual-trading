@@ -1,20 +1,22 @@
 import WebSocket from "ws"
 import { RedisManager } from "@repo/queue"
 
-const STREAM = "btcusdt@trade"
+const STREAM = "btcusdt@markPrice"
 
 export function startOracle() {
-  const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${STREAM}`)
+  const ws = new WebSocket(`wss://fstream.binance.com/ws/${STREAM}`)
 
   ws.on("open", () => console.log("Binance WS connected"))
 
   ws.on("message", raw => {
     const message = JSON.parse(raw.toString())
-    const price = parseFloat(message.p)
-    const timeStamp = message.T
+    const markPrice   = parseFloat(message.p)
+    const indexPrice  = parseFloat(message.i)
+    const fundingRate = parseFloat(message.r)
+    const nextFunding = message.T
 
-    const payload = JSON.stringify({s: "btcusdt", p: price, t: timeStamp})
-    console.log(payload)
+    const payload = JSON.stringify({s: "btcusdt", m: markPrice, i: indexPrice, r: fundingRate, T: nextFunding})
+    console.log(message)
     RedisManager.getInstance().publishToChannel("prices:update", payload)
   })
 
