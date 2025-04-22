@@ -7,3 +7,15 @@ export interface Order {
   filledQty: number
   timestamp: number
 }
+
+export interface OrderbookType {
+  
+}
+
+export interface UserPosition {
+
+}
+
+export interface Orderbook {
+
+}

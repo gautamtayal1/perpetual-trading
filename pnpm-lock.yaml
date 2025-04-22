@@ -93,12 +93,21 @@ importers:
 
   packages/queue:
     dependencies:
+      '@repo/engine':
+        specifier: workspace:*
+        version: link:../../services/engine
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       bullmq:
         specifier: ^5.49.1
         version: 5.49.1
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
       ioredis:
         specifier: ^5.6.1
         version: 5.6.1
@@ -108,6 +117,12 @@ importers:
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
+
+  packages/types:
+    dependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   packages/typescript-config: {}
 
@@ -153,6 +168,9 @@ importers:
       '@repo/queue':
         specifier: workspace:*
         version: link:../../packages/queue
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -1468,6 +1486,10 @@ packages:
 
   dotenv@16.0.3:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
+
+  dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -4473,6 +4495,8 @@ snapshots:
       no-case: 2.3.2
 
   dotenv@16.0.3: {}
+
+  dotenv@16.5.0: {}
 
   dunder-proto@1.0.1:
     dependencies:
