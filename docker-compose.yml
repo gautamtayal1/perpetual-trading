@@ -5,3 +5,18 @@ services:
       - "6379:6379"
       - "8001:8001"
     restart: unless-stopped
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5441:5432"
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

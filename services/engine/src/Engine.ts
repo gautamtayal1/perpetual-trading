@@ -117,7 +117,7 @@ export class Engine {
     const { executedQty, fills } = this.orderbook?.addOrder(order) ?? { executedQty: 0, fills: [] }
 
     this.updateUserPnl(fills, executedQty, order)
-    this.updateUserPosition(executedQty, order)
+    this.updateUserPosition(fills, executedQty, order)
     this.publishUserBalance(order.userId)
     this.publishLastTrade(fills)
     this.publishDepth()
@@ -125,7 +125,7 @@ export class Engine {
     this.updateRedisDepth()
     this.updateRedisOrder(order)
     this.updateRedisFills(fills)
-
+    //this.updateRedisPosition(fills, executedQty, order)
     console.log(executedQty, fills)
   }
 
@@ -251,8 +251,9 @@ export class Engine {
   }
 
   updateUserPosition (
+    fills: Fill[],
     executedQty: number,
-    order: Order
+    order: Order,
   ) {
     const userPosition = this.userPosition.get(order.userId)
     switch(userPosition?.side) {
@@ -350,6 +351,43 @@ export class Engine {
         }
       break
     }
+
+    // fills.forEach((fill) => {
+    //   const userPosition = this.userPosition.get(fill.otherUserId)
+
+    //   switch (userPosition?.side) {
+    //     case null:
+    //       userPosition.side = order.side === "LONG" ? "SHORT" : "LONG"
+    //       userPosition.entryPrice = fill.price
+    //       userPosition.quantity = fill.quantity
+    //       userPosition.margin = (fill.price * fill.quantity) / order.leverage
+    //       break;
+
+    //     case "LONG":
+    //       if (order.side === "SHORT") {
+    //         userPosition.quantity += fill.quantity
+    //         const oldNotional = userPosition.entryPrice * userPosition.quantity
+    //         const newNotional = fill.price * fill.quantity
+    //         const totalQuantity = userPosition.quantity + fill.quantity
+
+    //         userPosition.entryPrice = (oldNotional + newNotional) / totalQuantity
+            
+            
+    //       } else {
+    //         userPosition.quantity -= fill.quantity
+    //       }
+    //       break;
+    //     case "SHORT":
+    //       if (order.side === "LONG") {
+    //         userPosition.quantity -= fill.quantity
+    //       } else {
+    //         userPosition.quantity += fill.quantity
+    //       }
+    //       break;
+
+    //     break;
+    //   }
+    // })
   }
 
   publishUserBalance (userId: string) {
@@ -415,4 +453,17 @@ export class Engine {
       data: fills
     })
   }
+
+  // updateRedisPosition (
+  //   fills: Fill[],
+  //   executedQty: number,
+  //   order: Order
+  // ) {
+  //   const userPosition = this.userPosition.get(order.userId)
+  //   eventQueue.add("update_position", {
+  //     data: userPosition
+  //   })
+
+  //   eventQueue.add("update_fills", {
+  // }
 }

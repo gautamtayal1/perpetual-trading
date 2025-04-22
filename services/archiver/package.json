@@ -1,0 +1,21 @@
+{
+  "name": "@repo/archiver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "bullmq": "^5.49.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}
