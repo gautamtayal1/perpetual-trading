@@ -106,18 +106,51 @@ export class Orderbook {
   }
 
   getMarketDepth () {
+    const bidDepth = this.aggregateByPrice(this.bids, true)
+    const askDepth = this.aggregateByPrice(this.asks, false)
 
+    return {
+      ask: askDepth,
+      bid: bidDepth,
+    }
   }
 
-  aggregateByPrice () {
+  aggregateByPrice (orders: Order[], descending: boolean = true) {
+    const priceMap = new Map()
 
-  }
+    orders.forEach((order) => {
+      if(order.quantity > 0) {
+        priceMap.set(order.entryPrice, (priceMap.get(order.entryPrice) || 0) + order.quantity)
+      }
+    })
 
-  getOpenOrders () {
-
-  }
-
-  cancelOrder() {
+    const entries = Array.from(priceMap.entries())
+    .map(([price, quantity]) => [price.toString(), quantity.toString()]);
     
+    return descending 
+      ? entries.sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]))  
+      : entries.sort((a, b) => parseFloat(a[0]) - parseFloat(b[0]));
+  }
+
+  getOpenOrders (userId: string) {
+    const userBids = this.bids.filter((bid) => bid.userId === userId)
+    const userAsks = this.asks.filter((ask) => ask.userId === userId)
+
+    return [...userAsks, ...userBids]
+  }
+
+  cancelOrder(orderId: string, userId: string) {
+    const bidIndex = this.bids.findIndex((bid) => bid.userId === userId && bid.id === orderId)
+
+    if(bidIndex !== -1) {
+      this.bids.splice(bidIndex, 1)
+      console.log("order cancelled")
+    }
+    const askIndex = this.asks.findIndex((ask) => ask.userId === userId && ask.id === orderId)
+
+    if(askIndex !== -1) {
+      this.asks.splice(askIndex, 1)
+      console.log("order cancelled")
+    }
   }
 }
