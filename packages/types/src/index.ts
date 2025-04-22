@@ -2,13 +2,15 @@ export type OrderType = "MARKET-CREATE" | "LIMIT-CREATE" | "LIMIT-CANCEL";
 export type OrderSide = "LONG" | "SHORT" | null;
 
 export interface Order {
+  id?: string;
   userId: string;
-  market: "BTCUSDT";
+  market?: "BTCUSDT";
   entryPrice: number;
   quantity: number;
-  type: OrderType;
+  type?: OrderType;
   side: OrderSide;
   leverage: number;
+  filled: number;
 };
 
 export interface UserPosition {
@@ -25,4 +27,13 @@ export interface UserPosition {
 export interface UserBalance {
   availableBalance: number;
   lockedBalance: number;
+}
+
+export interface Fill {
+  fillId: string
+  orderId: string;
+  userId: string;
+  otherUserId: string;
+  price: number;
+  quantity: number;
 }

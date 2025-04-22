@@ -1,6 +1,7 @@
 import { Orderbook } from "./Orderbook.js"
 import { S3Manager } from "./S3Manager.js"
 import { Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
+import { v4 as uuidv4 } from "uuid" 
 
 const ENGINE_KEY = "snapshot.json"
 
@@ -93,14 +94,28 @@ export class Engine {
   
   createOrder(
     userId: string, 
-    price: number, 
+    entryPrice: number, 
     quantity: number, 
     side: OrderSide, 
     leverage: number
   ) {
     console.log("create order entered")
     this.ensureUser(userId)
-    this.checkAndLockBalance(userId, price, quantity, leverage, side)
+    this.checkAndLockBalance(userId, entryPrice, quantity, leverage, side)
+
+    const orderId = uuidv4()
+    const order = {
+      id: orderId,
+      userId,
+      side,
+      entryPrice, 
+      quantity,
+      leverage,
+      filled: 0
+    }
+    const { executedQty, fills } = this.orderbook?.addOrder(order)
+    console.log(executedQty, fills)
+
   }
 
   ensureUser(userId: string) {
@@ -195,4 +210,5 @@ export class Engine {
       }
     } 
   }
+
 }
