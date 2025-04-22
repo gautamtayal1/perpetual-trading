@@ -231,8 +231,6 @@ export class Engine {
       userBalance.availableBalance += ((userPosition?.entryPrice! / order.leverage) * Math.min(userPosition?.quantity!, executedQty)) + pnl
 
       userBalance.lockedBalance -= (userPosition?.entryPrice! / order.leverage) * Math.min(userPosition?.quantity!, executedQty)
-
-      // userPosition?.quantity -= executedQty //todo
     } 
     
     if(orderSide === "LONG" && userSide === "SHORT") {
@@ -244,6 +242,107 @@ export class Engine {
     }
   }
 
+  updateUserPosition (
+    fills: Fill[],
+    executedQty: number,
+    order: Order
+  ) {
+    const userPosition = this.userPosition.get(order.userId)
+    switch(userPosition?.side) {
+      case null:
+        userPosition.side = order.side
+        userPosition.entryPrice = order.entryPrice
+        userPosition.quantity = executedQty
+        userPosition.margin = (order.entryPrice * order.quantity) / order.leverage
+      break
+      case "SHORT":
+        if (order.side === "SHORT") {
+          userPosition.quantity += executedQty
+          
+          const oldNotional = userPosition.entryPrice * userPosition.quantity
+          const newNotional = order.entryPrice * executedQty
+          const totalQuantity = userPosition.quantity + executedQty
+
+          userPosition.entryPrice = (oldNotional + newNotional) / totalQuantity
+
+          const newMargin = (order.entryPrice * executedQty) / order.leverage
+          userPosition.margin = userPosition.margin + newMargin
+        } else {
+          
+          if(userPosition.quantity < executedQty) {
+            userPosition.side = "LONG"
+            userPosition.quantity = executedQty - userPosition.quantity
+            userPosition.margin = (order.entryPrice * (executedQty - userPosition.quantity)) / order.leverage
+            userPosition.entryPrice = order.entryPrice
+          }
+          
+          if (userPosition.quantity > executedQty) {
+            userPosition.quantity -= executedQty
+            
+            const oldNotional = userPosition.entryPrice * userPosition.quantity
+            const newNotional = order.entryPrice * executedQty
+            const totalQuantity = userPosition.quantity + executedQty
+
+            userPosition.entryPrice = (oldNotional - newNotional) / totalQuantity
+
+            const newMargin = (order.entryPrice * executedQty) / order.leverage
+            userPosition.margin = userPosition.margin - newMargin
+          }
+
+          if (userPosition.quantity === executedQty) {
+            userPosition.side = null
+            userPosition.quantity = 0
+            userPosition.margin = 0
+            userPosition.entryPrice = 0
+          }
+        }
+        
+      break
+      case "LONG":
+        if (order.side === "LONG") {
+          userPosition.quantity += executedQty
+          
+          const oldNotional = userPosition.entryPrice * userPosition.quantity
+          const newNotional = order.entryPrice * executedQty
+          const totalQuantity = userPosition.quantity + executedQty
+
+          userPosition.entryPrice = (oldNotional + newNotional) / totalQuantity
+
+          const newMargin = (order.entryPrice * executedQty) / order.leverage
+          userPosition.margin = userPosition.margin + newMargin
+        } else {
+          
+          if(userPosition.quantity < executedQty) {
+            userPosition.side = "SHORT"
+            userPosition.quantity = executedQty - userPosition.quantity
+            userPosition.margin = (order.entryPrice * (executedQty - userPosition.quantity)) / order.leverage
+            userPosition.entryPrice = order.entryPrice
+          }
+          
+          if (userPosition.quantity > executedQty) {
+            userPosition.quantity -= executedQty
+            
+            const oldNotional = userPosition.entryPrice * userPosition.quantity
+            const newNotional = order.entryPrice * executedQty
+            const totalQuantity = userPosition.quantity + executedQty
+
+            userPosition.entryPrice = (oldNotional - newNotional) / totalQuantity
+
+            const newMargin = (order.entryPrice * executedQty) / order.leverage
+            userPosition.margin = userPosition.margin - newMargin
+          }
+
+          if (userPosition.quantity === executedQty) {
+            userPosition.side = null
+            userPosition.quantity = 0
+            userPosition.margin = 0
+            userPosition.entryPrice = 0
+          }
+        }
+      break
+
+    }
+  }
 
 
 }
