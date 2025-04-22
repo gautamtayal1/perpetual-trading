@@ -31,7 +31,6 @@ export class Orderbook {
     this.asks.sort((a, b) => a.entryPrice - b.entryPrice)
   }
 
-
   addOrder (order: Order) {
     console.log("inside addorder")
     if (order.side === "LONG") {
@@ -62,8 +61,13 @@ export class Orderbook {
       if (order.entryPrice > bid[i]?.entryPrice! && executedQty) {
         const traded = Math.min(bid[i]?.quantity!, order.quantity - executedQty)
         executedQty += traded
-        //@ts-ignore
-        bid[i]?.filled += traded
+        
+        if (bid[i]) {
+          if (bid[i]!.filled === undefined) {
+            bid[i]!.filled = 0;
+          }
+          bid[i]!.filled += traded;
+        }
 
         fills.push({
           fillId: uuidv4(),
@@ -88,8 +92,13 @@ export class Orderbook {
       if (order.entryPrice > ask[i]?.entryPrice! && executedQty) {
         const traded = Math.min(ask[i]?.quantity!, order.quantity - executedQty)
         executedQty += traded
-        //@ts-ignore
-        ask[i]?.filled += traded
+        
+        if (ask[i]) {
+          if (ask[i]!.filled === undefined) {
+            ask[i]!.filled = 0;
+          }
+          ask[i]!.filled += traded;
+        }
 
         fills.push({
           fillId: uuidv4(),

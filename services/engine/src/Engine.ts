@@ -60,7 +60,7 @@ export class Engine {
     const snapshot = {
       orderbook: this.orderbook?.getSnapshot(),
       userPosition: Array.from(this.userPosition.entries()),
-      balance: Array.from(this.userBalance.entries())
+      userBalance: Array.from(this.userBalance.entries())
     }
     await S3Manager.uploadSnapshot(snapshot, ENGINE_KEY)
   }
@@ -124,7 +124,7 @@ export class Engine {
   ensureUser(userId: string) {
     if (!this.userBalance.has(userId)) {
       this.userBalance.set(userId, {
-        availableBalance: 100,
+        availableBalance: 100000,
         lockedBalance: 0
       })
     }
@@ -250,10 +250,12 @@ export class Engine {
     const userPosition = this.userPosition.get(order.userId)
     switch(userPosition?.side) {
       case null:
-        userPosition.side = order.side
-        userPosition.entryPrice = order.entryPrice
-        userPosition.quantity = executedQty
-        userPosition.margin = (order.entryPrice * order.quantity) / order.leverage
+        if (executedQty) {
+          userPosition.side = order.side
+          userPosition.entryPrice = order.entryPrice
+          userPosition.quantity = executedQty
+          userPosition.margin = (order.entryPrice * order.quantity) / order.leverage
+        } 
       break
       case "SHORT":
         if (order.side === "SHORT") {
@@ -340,9 +342,6 @@ export class Engine {
           }
         }
       break
-
     }
   }
-
-
 }
