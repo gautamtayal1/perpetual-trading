@@ -141,13 +141,11 @@ export class Orderbook {
 
   cancelOrder(orderId: string, userId: string) {
     const bidIndex = this.bids.findIndex((bid) => bid.userId === userId && bid.id === orderId)
-
     if(bidIndex !== -1) {
       this.bids.splice(bidIndex, 1)
       console.log("order cancelled")
     }
     const askIndex = this.asks.findIndex((ask) => ask.userId === userId && ask.id === orderId)
-
     if(askIndex !== -1) {
       this.asks.splice(askIndex, 1)
       console.log("order cancelled")

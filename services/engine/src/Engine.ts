@@ -1,6 +1,6 @@
 import { Orderbook } from "./Orderbook.js"
 import { S3Manager } from "./S3Manager.js"
-import { Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
+import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
 import { v4 as uuidv4 } from "uuid" 
 
 const ENGINE_KEY = "snapshot.json"
@@ -113,9 +113,12 @@ export class Engine {
       leverage,
       filled: 0
     }
-    const { executedQty, fills } = this.orderbook?.addOrder(order)
-    console.log(executedQty, fills)
+    const { executedQty, fills } = this.orderbook?.addOrder(order) ?? { executedQty: 0, fills: [] }
 
+    this.updateUserPnl(fills, executedQty, order)
+    this.updateUserPosition(fills, executedQty, order)
+
+    console.log(executedQty, fills)
   }
 
   ensureUser(userId: string) {
@@ -210,5 +213,37 @@ export class Engine {
       }
     } 
   }
+
+  updateUserPnl (
+    fills: Fill[], 
+    executedQty: number,
+    order: Order
+  ) {
+    const userPosition = this.userPosition.get(order.userId)
+    const userSide = userPosition?.side
+    const orderSide = order.side
+    const userBalance = this.userBalance.get(order.userId)!
+
+    if (!fills.length) return
+    if (userSide === "LONG" && orderSide === "SHORT" ) {
+      const pnl = (fills[0]?.price! - userPosition?.entryPrice!) * executedQty
+
+      userBalance.availableBalance += ((userPosition?.entryPrice! / order.leverage) * Math.min(userPosition?.quantity!, executedQty)) + pnl
+
+      userBalance.lockedBalance -= (userPosition?.entryPrice! / order.leverage) * Math.min(userPosition?.quantity!, executedQty)
+
+      // userPosition?.quantity -= executedQty //todo
+    } 
+    
+    if(orderSide === "LONG" && userSide === "SHORT") {
+      const pnl = (userPosition?.entryPrice! - fills[0]?.price!) * executedQty
+
+      userBalance.availableBalance += ((userPosition?.entryPrice! / order.leverage) * Math.min(userPosition?.quantity!, executedQty)) + pnl
+
+      userBalance.lockedBalance -= (userPosition?.entryPrice! / order.leverage) * Math.min(userPosition?.quantity!, executedQty)
+    }
+  }
+
+
 
 }
