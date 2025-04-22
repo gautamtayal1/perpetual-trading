@@ -1,6 +1,6 @@
 import { Queue } from "bullmq"
 
-export const orderQueue = new Queue("ORDER_PROCESSOR", {
+export const eventQueue = new Queue("EVENT_QUEUE", {
   connection: {
     host: process.env.REDIS_HOST || "localhost",
     port: Number(process.env.REDIS_PORT) || 6379

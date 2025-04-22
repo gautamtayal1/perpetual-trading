@@ -186,6 +186,9 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.787.0
         version: 3.787.0
+      '@repo/event-queue':
+        specifier: workspace:*
+        version: link:../event-queue
       '@repo/queue':
         specifier: workspace:*
         version: link:../../packages/queue

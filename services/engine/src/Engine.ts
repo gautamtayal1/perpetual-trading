@@ -1,3 +1,4 @@
+import { eventQueue, RedisManager } from "@repo/event-queue"
 import { Orderbook } from "./Orderbook.js"
 import { S3Manager } from "./S3Manager.js"
 import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
@@ -117,6 +118,13 @@ export class Engine {
 
     this.updateUserPnl(fills, executedQty, order)
     this.updateUserPosition(executedQty, order)
+    this.publishUserBalance(order.userId)
+    this.publishLastTrade(fills)
+    this.publishDepth()
+    this.updateRedisBalance(order.userId)
+    this.updateRedisDepth()
+    this.updateRedisOrder(order)
+    this.updateRedisFills(fills)
 
     console.log(executedQty, fills)
   }
@@ -342,5 +350,69 @@ export class Engine {
         }
       break
     }
+  }
+
+  publishUserBalance (userId: string) {
+    const userBalance = this.userBalance.get(userId)
+    if (userBalance) {
+      RedisManager.getInstance().publishToChannel(`user@${userId}`, {
+        data: {
+          a: userBalance.availableBalance,
+          l: userBalance.lockedBalance
+        }
+      })
+    }
+  }
+
+  publishLastTrade (fills: Fill[]) {
+   const lastFill = fills[fills.length - 1]
+   RedisManager.getInstance().publishToChannel(`trade:update`, {
+    data: {
+      p: lastFill?.price,
+      q: lastFill?.quantity,
+    }
+   })
+  }
+
+  publishDepth () {
+    const { asks, bids } = this.orderbook?.getMarketDepth() ?? { asks: [], bids: [] }
+    RedisManager.getInstance().publishToChannel(`depth:update`, {
+      data: {
+        a: asks,
+        b: bids,
+      }
+    })
+  }
+
+  updateRedisBalance (userId: string) {
+    const balance = this.userBalance.get(userId)
+    eventQueue.add("update_balance", {
+      data: {
+        userId,
+        balance: balance?.availableBalance
+      }
+    })
+  }
+
+  updateRedisDepth () {
+    const { asks, bids } = this.orderbook?.getMarketDepth() ?? { asks: [], bids: [] }
+    eventQueue.add("update_depth", {
+      data: {
+        a: asks,
+        b: bids,
+      }
+    })
+  }
+
+  updateRedisOrder (order: Order) {
+    eventQueue.add("update_order", {  
+      data: order
+    })
+  }
+
+  updateRedisFills (fills: Fill[]) {
+    eventQueue.add("update_fills", {
+      data: fills
+    })
   }
 }
