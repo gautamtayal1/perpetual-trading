@@ -45,7 +45,8 @@ export class Engine {
     }
     setInterval(() => {
       engine.saveSnapshot()
-    }, 3000);
+      console.log("Saving snapshot")
+    }, 5000);
     return engine
   }
 

@@ -42,7 +42,6 @@ export const S3Manager = {
   },
 };
 
-// helper
 const streamToString = (stream: Readable): Promise<string> =>
   new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
