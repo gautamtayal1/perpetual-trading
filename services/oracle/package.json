@@ -14,7 +14,7 @@
   "type": "module",
   "dependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@repo/queue": "workspace:*",
+    "@repo/event-queue": "workspace:*",
     "ioredis": "^5.6.1",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",

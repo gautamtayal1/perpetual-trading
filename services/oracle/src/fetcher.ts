@@ -1,5 +1,5 @@
 import WebSocket from "ws"
-import { RedisManager } from "@repo/queue"
+import { RedisManager } from "@repo/event-queue"
 
 const STREAM = "btcusdt@markPrice"
 

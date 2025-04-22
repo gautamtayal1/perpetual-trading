@@ -116,7 +116,7 @@ export class Engine {
     const { executedQty, fills } = this.orderbook?.addOrder(order) ?? { executedQty: 0, fills: [] }
 
     this.updateUserPnl(fills, executedQty, order)
-    this.updateUserPosition(fills, executedQty, order)
+    this.updateUserPosition(executedQty, order)
 
     console.log(executedQty, fills)
   }
@@ -243,7 +243,6 @@ export class Engine {
   }
 
   updateUserPosition (
-    fills: Fill[],
     executedQty: number,
     order: Order
   ) {
