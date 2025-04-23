@@ -12,6 +12,7 @@ onMarketDataUpdate(({top, index}) => {
   const bid = parseInt(top.b[0])
   const markPrice = medianOfThree(ask, bid, index)
 
+  console.log("markPrice: ", markPrice)
   RedisManager.getInstance().publishToChannel('markPrice:update', markPrice)
 }
 )

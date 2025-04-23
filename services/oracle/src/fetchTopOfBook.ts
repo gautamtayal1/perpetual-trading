@@ -8,7 +8,8 @@ export async function fetchTopOfBook() {
     .getInstance()
     .subscribe("topOfBook:update", 
       top => {
-        emitTopOfBook(top)
+        console.log("top recieved")
+        emitTopOfBook(top.data)
       }
   )
 }

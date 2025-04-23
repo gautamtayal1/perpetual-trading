@@ -17,7 +17,7 @@ export function startOracle() {
     const nextFunding = message.T
 
     const payload = JSON.stringify({s: "btcusdt", m: markPrice, i: indexPrice, r: fundingRate, T: nextFunding})
-    console.log(message)
+    console.log(payload)
     RedisManager.getInstance().publishToChannel("prices:update", payload)
     emitIndexPrice(indexPrice)
   })
