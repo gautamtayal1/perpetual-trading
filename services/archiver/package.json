@@ -13,11 +13,16 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "bullmq": "^5.49.1",
+    "dotenv": "^16.5.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.22.0",
+    "prisma": "5.22.0"
   }
 }

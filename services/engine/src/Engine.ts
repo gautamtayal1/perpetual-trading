@@ -4,7 +4,7 @@ import { S3Manager } from "./S3Manager.js"
 import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
 import { v4 as uuidv4 } from "uuid" 
 
-const ENGINE_KEY = "snapshot.json"
+const ENGINE_KEY = "test-snapshot.json"
 
 export class Engine {
   public static instance: Engine | null = null
@@ -53,7 +53,7 @@ export class Engine {
     }
     setInterval(() => {
       engine.saveSnapshot()
-    }, 10000);
+    }, 3000);
     return engine
   }
 
@@ -138,7 +138,7 @@ export class Engine {
     }
     if (!this.userPosition.has(userId)) {
       this.userPosition.set(userId, {
-        side: null,
+        side: "UNINITIALIZED",
         quantity: 0,
         entryPrice: 0,
         margin: 0,
@@ -178,7 +178,7 @@ export class Engine {
           }
           
         break;
-        case null:{
+        case "UNINITIALIZED":{
           const marginRequired = (price * quantity) / leverage
           if(balance.availableBalance < marginRequired) {
             throw new Error("Insufficient Balance")
@@ -209,7 +209,7 @@ export class Engine {
             balance.lockedBalance += marginRequired
           }
         break;
-        case null:{
+        case "UNINITIALIZED" :{
           const marginRequired = (price * quantity) / leverage
           if(balance.availableBalance < marginRequired) {
             throw new Error("Insufficient Balance")
@@ -293,7 +293,7 @@ export class Engine {
           }
 
           if (userPosition.quantity === executedQty) {
-            userPosition.side = null
+            userPosition.side = "UNINITIALIZED"
             userPosition.quantity = 0
             userPosition.margin = 0
             userPosition.entryPrice = 0
@@ -338,7 +338,7 @@ export class Engine {
           }
 
           if (userPosition.quantity === executedQty) {
-            userPosition.side = null
+            userPosition.side = "UNINITIALIZED"
             userPosition.quantity = 0
             userPosition.margin = 0
             userPosition.entryPrice = 0
@@ -383,7 +383,7 @@ export class Engine {
               userPosition.margin = userPosition.margin - newMargin
             } 
             if (userPosition.quantity === fill.quantity) {
-              userPosition.side = null
+              userPosition.side = "UNINITIALIZED"
               userPosition.quantity = 0
               userPosition.margin = 0
               userPosition.entryPrice = 0
@@ -415,7 +415,7 @@ export class Engine {
               userPosition.margin = userPosition.margin - newMargin
             }
             if (userPosition.quantity === fill.quantity) {
-              userPosition.side = null
+              userPosition.side = "UNINITIALIZED"
               userPosition.quantity = 0
               userPosition.margin = 0
               userPosition.entryPrice = 0
@@ -423,13 +423,12 @@ export class Engine {
           }
           break;
         default:
-          case null:
-            if (userPosition) {
-              userPosition.side = order.side === "LONG" ? "SHORT" : "LONG"
-              userPosition.entryPrice = fill.price
-              userPosition.quantity = fill.quantity
-              userPosition.margin = (fill.price * fill.quantity) / order.leverage
-            }
+          if (userPosition) {
+            userPosition.side = order.side === "LONG" ? "SHORT" : "LONG"
+            userPosition.entryPrice = fill.price
+            userPosition.quantity = fill.quantity
+            userPosition.margin = (fill.price * fill.quantity) / order.leverage
+          }
           break;
       }
     })
@@ -497,12 +496,14 @@ export class Engine {
   }
 
   updateRedisFills (fills: Fill[], order: Order) {
-    eventQueue.add("update_fills", {
-      type: "FILL_UPDATE",
-      data: {
-        ...fills,
-        side: order.side
-      }
+    fills.forEach((fill) => {
+      eventQueue.add("update_fills", {
+        type: "FILL_UPDATE",
+        data: {
+          ...fills,
+          side: order.side
+        }
+      })
     })
   }
 

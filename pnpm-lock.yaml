@@ -96,17 +96,16 @@ importers:
         version: 5.8.2
 
   packages/db:
-    dependencies:
-      '@prisma/client':
-        specifier: ^5.15.0
-        version: 5.22.0(prisma@5.22.0)
-      prisma:
-        specifier: ^5.15.0
-        version: 5.22.0
     devDependencies:
+      '@prisma/client':
+        specifier: ^5.22.0
+        version: 5.22.0(prisma@5.22.0)
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      prisma:
+        specifier: ^5.22.0
+        version: 5.22.0
 
   packages/eslint-config:
     devDependencies:
@@ -227,12 +226,22 @@ importers:
       bullmq:
         specifier: ^5.49.1
         version: 5.49.1
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
+    devDependencies:
+      '@prisma/client':
+        specifier: ^5.22.0
+        version: 5.22.0(prisma@5.22.0)
+      prisma:
+        specifier: 5.22.0
+        version: 5.22.0
 
   services/engine:
     dependencies:

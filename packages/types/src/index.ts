@@ -1,5 +1,5 @@
 export type OrderType = "MARKET-CREATE" | "LIMIT-CREATE" | "LIMIT-CANCEL";
-export type OrderSide = "LONG" | "SHORT" | null;
+export type OrderSide = "LONG" | "SHORT" | "UNINITIALIZED";
 
 export interface Order {
   id?: string;
