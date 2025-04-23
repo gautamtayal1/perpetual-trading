@@ -1,5 +1,6 @@
 import WebSocket from "ws"
 import { RedisManager } from "@repo/event-queue"
+import { emitIndexPrice } from "./marketDataBus.js"
 
 const STREAM = "btcusdt@markPrice"
 
@@ -18,6 +19,7 @@ export function startOracle() {
     const payload = JSON.stringify({s: "btcusdt", m: markPrice, i: indexPrice, r: fundingRate, T: nextFunding})
     console.log(message)
     RedisManager.getInstance().publishToChannel("prices:update", payload)
+    emitIndexPrice(indexPrice)
   })
 
   ws.on("error", (error) => console.error("WS Error: ", error))

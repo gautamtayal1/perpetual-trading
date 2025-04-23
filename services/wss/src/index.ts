@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws"
-import { SubscriptionManager } from "./utils/redisClient.js"
+import { SubscriptionManager } from "@repo/event-queue"
 
 const wss = new WebSocketServer({ port: 8081 })
 

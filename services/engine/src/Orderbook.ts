@@ -45,7 +45,7 @@ export class Orderbook {
     } else {
       const {executedQty, fills} = this.matchAsk(order)
       if (executedQty < order.quantity) {
-        this.bids.push({...order, filled: executedQty})
+        this.asks.push({...order, filled: executedQty})
         this.sortOrders()
       }
       return { executedQty, fills }
@@ -58,7 +58,7 @@ export class Orderbook {
 
     for(let i = 0; i < this.bids.length; i++) {
       const bid = this.bids
-      if (order.entryPrice > bid[i]?.entryPrice! && executedQty) {
+      if (order.entryPrice <= bid[i]?.entryPrice! && executedQty < order.quantity) {
         const traded = Math.min(bid[i]?.quantity!, order.quantity - executedQty)
         executedQty += traded
         
@@ -89,7 +89,7 @@ export class Orderbook {
 
     for(let i = 0; i < this.asks.length; i++) {
       const ask = this.asks
-      if (order.entryPrice > ask[i]?.entryPrice! && executedQty) {
+      if (order.entryPrice >= ask[i]?.entryPrice! && executedQty < order.quantity) {
         const traded = Math.min(ask[i]?.quantity!, order.quantity - executedQty)
         executedQty += traded
         

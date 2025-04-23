@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
+    "@repo/event-queue": "workspace:*",
     "@types/ws": "^8.18.1"
   }
 }

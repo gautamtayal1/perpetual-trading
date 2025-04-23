@@ -293,9 +293,15 @@ importers:
 
   services/oracle:
     dependencies:
+      '@repo/engine':
+        specifier: workspace:*
+        version: link:../engine
       '@repo/event-queue':
         specifier: workspace:*
         version: link:../event-queue
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -316,6 +322,27 @@ importers:
         specifier: ^8.18.1
         version: 8.18.1
 
+  services/position-liquidator:
+    dependencies:
+      '@repo/engine':
+        specifier: workspace:*
+        version: link:../engine
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      bullmq:
+        specifier: ^5.49.1
+        version: 5.49.1
+      tsx:
+        specifier: ^4.19.3
+        version: 4.19.3
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   services/wss:
     dependencies:
       '@repo/typescript-config':
@@ -331,6 +358,9 @@ importers:
         specifier: ^8.18.1
         version: 8.18.1
     devDependencies:
+      '@repo/event-queue':
+        specifier: workspace:*
+        version: link:../event-queue
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1

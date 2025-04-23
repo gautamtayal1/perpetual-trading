@@ -4,7 +4,7 @@ import { S3Manager } from "./S3Manager.js"
 import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
 import { v4 as uuidv4 } from "uuid" 
 
-const ENGINE_KEY = "test-snapshot.json"
+const ENGINE_KEY = "test2-snapshot.json"
 
 export class Engine {
   public static instance: Engine | null = null
@@ -91,6 +91,8 @@ export class Engine {
 
         break
     }
+    console.log("order processed, moving to liquidator")
+    this.updateTopOfBook()
   }
   
   createOrder(
@@ -529,6 +531,16 @@ export class Engine {
           userId: fill.otherUserId
         }
       })
+    })
+  }
+
+  updateTopOfBook () {
+    const { asks, bids } = this.orderbook?.getMarketDepth() ?? { asks: [], bids: [] }
+    RedisManager.getInstance().publishToChannel(`topOfBook:update`, {
+      data: {
+        a: asks[0],
+        b: bids[0]
+      }
     })
   }
 }

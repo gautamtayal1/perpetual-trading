@@ -1,3 +1,5 @@
-import { startOracle } from "./fetcher.js";
+import { startOracle } from "./fetchBinanceWs.js";
+import { fetchTopOfBook } from "./fetchTopOfBook.js";
 
 startOracle()
+fetchTopOfBook()

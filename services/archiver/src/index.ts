@@ -1,6 +1,5 @@
 import { Worker } from "bullmq"
 import prisma from "@repo/db/client";
-import { Fill } from "@repo/types";
 
 ;(async () => {
   const worker = new Worker("EVENT_QUEUE", async(job) => {
