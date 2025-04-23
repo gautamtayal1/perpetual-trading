@@ -36,4 +36,5 @@ export interface Fill {
   otherUserId: string;
   price: number;
   quantity: number;
+  side?: OrderSide;
 }

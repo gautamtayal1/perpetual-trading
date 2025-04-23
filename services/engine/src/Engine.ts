@@ -124,8 +124,8 @@ export class Engine {
     this.updateRedisBalance(order.userId)
     this.updateRedisDepth()
     this.updateRedisOrder(order)
-    this.updateRedisFills(fills)
-    //this.updateRedisPosition(fills, executedQty, order)
+    this.updateRedisFills(fills, order)
+    this.updateRedisPosition(fills, order)
     console.log(executedQty, fills)
   }
 
@@ -257,22 +257,14 @@ export class Engine {
   ) {
     const userPosition = this.userPosition.get(order.userId)
     switch(userPosition?.side) {
-      case null:
-        if (executedQty) {
-          userPosition.side = order.side
-          userPosition.entryPrice = order.entryPrice
-          userPosition.quantity = executedQty
-          userPosition.margin = (order.entryPrice * order.quantity) / order.leverage
-        } 
-      break
       case "SHORT":
         if (order.side === "SHORT") {
-          userPosition.quantity += executedQty
           
           const oldNotional = userPosition.entryPrice * userPosition.quantity
           const newNotional = order.entryPrice * executedQty
           const totalQuantity = userPosition.quantity + executedQty
-
+          
+          userPosition.quantity += executedQty
           userPosition.entryPrice = (oldNotional + newNotional) / totalQuantity
 
           const newMargin = (order.entryPrice * executedQty) / order.leverage
@@ -280,20 +272,21 @@ export class Engine {
         } else {
           
           if(userPosition.quantity < executedQty) {
+            const remainingQty = executedQty - userPosition.quantity
             userPosition.side = "LONG"
-            userPosition.quantity = executedQty - userPosition.quantity
-            userPosition.margin = (order.entryPrice * (executedQty - userPosition.quantity)) / order.leverage
+            userPosition.quantity = remainingQty
+            userPosition.margin = (order.entryPrice * remainingQty) / order.leverage
             userPosition.entryPrice = order.entryPrice
           }
           
           if (userPosition.quantity > executedQty) {
-            userPosition.quantity -= executedQty
             
             const oldNotional = userPosition.entryPrice * userPosition.quantity
             const newNotional = order.entryPrice * executedQty
-            const totalQuantity = userPosition.quantity + executedQty
-
+            const totalQuantity = userPosition.quantity - executedQty
+            
             userPosition.entryPrice = (oldNotional - newNotional) / totalQuantity
+            userPosition.quantity -= executedQty
 
             const newMargin = (order.entryPrice * executedQty) / order.leverage
             userPosition.margin = userPosition.margin - newMargin
@@ -310,12 +303,12 @@ export class Engine {
       break
       case "LONG":
         if (order.side === "LONG") {
-          userPosition.quantity += executedQty
           
           const oldNotional = userPosition.entryPrice * userPosition.quantity
           const newNotional = order.entryPrice * executedQty
           const totalQuantity = userPosition.quantity + executedQty
-
+          
+          userPosition.quantity += executedQty
           userPosition.entryPrice = (oldNotional + newNotional) / totalQuantity
 
           const newMargin = (order.entryPrice * executedQty) / order.leverage
@@ -323,18 +316,20 @@ export class Engine {
         } else {
           
           if(userPosition.quantity < executedQty) {
+            const remainingQty = executedQty - userPosition.quantity
             userPosition.side = "SHORT"
-            userPosition.quantity = executedQty - userPosition.quantity
-            userPosition.margin = (order.entryPrice * (executedQty - userPosition.quantity)) / order.leverage
+            userPosition.quantity = remainingQty
+            userPosition.margin = (order.entryPrice * remainingQty) / order.leverage
             userPosition.entryPrice = order.entryPrice
           }
           
           if (userPosition.quantity > executedQty) {
-            userPosition.quantity -= executedQty
-            
+
             const oldNotional = userPosition.entryPrice * userPosition.quantity
             const newNotional = order.entryPrice * executedQty
             const totalQuantity = userPosition.quantity + executedQty
+
+            userPosition.quantity -= executedQty
 
             userPosition.entryPrice = (oldNotional - newNotional) / totalQuantity
 
@@ -350,44 +345,94 @@ export class Engine {
           }
         }
       break
+      default:
+        if (executedQty && userPosition) {
+          userPosition.side = order.side
+          userPosition.entryPrice = order.entryPrice
+          userPosition.quantity = executedQty
+          userPosition.margin = (order.entryPrice * order.quantity) / order.leverage
+        } 
+      break
     }
 
-    // fills.forEach((fill) => {
-    //   const userPosition = this.userPosition.get(fill.otherUserId)
+    fills.forEach((fill) => {
+      const userPosition = this.userPosition.get(fill.otherUserId)
 
-    //   switch (userPosition?.side) {
-    //     case null:
-    //       userPosition.side = order.side === "LONG" ? "SHORT" : "LONG"
-    //       userPosition.entryPrice = fill.price
-    //       userPosition.quantity = fill.quantity
-    //       userPosition.margin = (fill.price * fill.quantity) / order.leverage
-    //       break;
-
-    //     case "LONG":
-    //       if (order.side === "SHORT") {
-    //         userPosition.quantity += fill.quantity
-    //         const oldNotional = userPosition.entryPrice * userPosition.quantity
-    //         const newNotional = fill.price * fill.quantity
-    //         const totalQuantity = userPosition.quantity + fill.quantity
-
-    //         userPosition.entryPrice = (oldNotional + newNotional) / totalQuantity
+      switch (userPosition?.side) {
+        case "LONG":
+          if (order.side === "SHORT") {
+            const oldNotional = userPosition.entryPrice * userPosition.quantity
+            const newNotional = fill.price * fill.quantity
+            const totalQuantity = userPosition.quantity + fill.quantity
             
-            
-    //       } else {
-    //         userPosition.quantity -= fill.quantity
-    //       }
-    //       break;
-    //     case "SHORT":
-    //       if (order.side === "LONG") {
-    //         userPosition.quantity -= fill.quantity
-    //       } else {
-    //         userPosition.quantity += fill.quantity
-    //       }
-    //       break;
+            userPosition.entryPrice = (oldNotional + newNotional) / totalQuantity
+            userPosition.quantity += fill.quantity
 
-    //     break;
-    //   }
-    // })
+            const newMargin = (fill.price * fill.quantity) / order.leverage
+            userPosition.margin = userPosition.margin + newMargin
+          } else {
+            if (userPosition.quantity > fill.quantity) {
+              const oldNotional = userPosition.entryPrice * userPosition.quantity
+              const newNotional = fill.price * fill.quantity
+              const totalQuantity = userPosition.quantity - fill.quantity
+              
+              userPosition.entryPrice = (oldNotional - newNotional) / totalQuantity
+
+              userPosition.quantity -= fill.quantity
+              const newMargin = (fill.price * fill.quantity) / order.leverage
+              userPosition.margin = userPosition.margin - newMargin
+            } 
+            if (userPosition.quantity === fill.quantity) {
+              userPosition.side = null
+              userPosition.quantity = 0
+              userPosition.margin = 0
+              userPosition.entryPrice = 0
+            }
+          }
+          break;
+        case "SHORT":
+          if (order.side === "LONG") {
+            const oldNotional = userPosition.entryPrice * userPosition.quantity
+            const newNotional = fill.price * fill.quantity
+            const totalQuantity = userPosition.quantity + fill.quantity
+            
+            userPosition.entryPrice = (oldNotional + newNotional) / totalQuantity
+            userPosition.quantity += fill.quantity
+
+            const newMargin = (fill.price * fill.quantity) / order.leverage
+            userPosition.margin = userPosition.margin + newMargin
+
+          } else {
+            if (userPosition.quantity > fill.quantity) {
+              const oldNotional = userPosition.entryPrice * userPosition.quantity
+              const newNotional = fill.price * fill.quantity
+              const totalQuantity = userPosition.quantity - fill.quantity
+              
+              userPosition.entryPrice = (oldNotional - newNotional) / totalQuantity
+              userPosition.quantity -= fill.quantity
+
+              const newMargin = (fill.price * fill.quantity) / order.leverage
+              userPosition.margin = userPosition.margin - newMargin
+            }
+            if (userPosition.quantity === fill.quantity) {
+              userPosition.side = null
+              userPosition.quantity = 0
+              userPosition.margin = 0
+              userPosition.entryPrice = 0
+            }
+          }
+          break;
+        default:
+          case null:
+            if (userPosition) {
+              userPosition.side = order.side === "LONG" ? "SHORT" : "LONG"
+              userPosition.entryPrice = fill.price
+              userPosition.quantity = fill.quantity
+              userPosition.margin = (fill.price * fill.quantity) / order.leverage
+            }
+          break;
+      }
+    })
   }
 
   publishUserBalance (userId: string) {
@@ -425,6 +470,7 @@ export class Engine {
   updateRedisBalance (userId: string) {
     const balance = this.userBalance.get(userId)
     eventQueue.add("update_balance", {
+      type: "BALANCE_UPDATE",
       data: {
         userId,
         balance: balance?.availableBalance
@@ -435,35 +481,53 @@ export class Engine {
   updateRedisDepth () {
     const { asks, bids } = this.orderbook?.getMarketDepth() ?? { asks: [], bids: [] }
     eventQueue.add("update_depth", {
+      type: "DEPTH_UPDATE",
       data: {
-        a: asks,
-        b: bids,
+        asks,
+        bids,
       }
     })
   }
 
   updateRedisOrder (order: Order) {
     eventQueue.add("update_order", {  
+      type: "ORDER_UPDATE",
       data: order
     })
   }
 
-  updateRedisFills (fills: Fill[]) {
+  updateRedisFills (fills: Fill[], order: Order) {
     eventQueue.add("update_fills", {
-      data: fills
+      type: "FILL_UPDATE",
+      data: {
+        ...fills,
+        side: order.side
+      }
     })
   }
 
-  // updateRedisPosition (
-  //   fills: Fill[],
-  //   executedQty: number,
-  //   order: Order
-  // ) {
-  //   const userPosition = this.userPosition.get(order.userId)
-  //   eventQueue.add("update_position", {
-  //     data: userPosition
-  //   })
+  updateRedisPosition (
+    fills: Fill[],
+    order: Order
+  ) {
+    const userPosition = this.userPosition.get(order.userId)
+    eventQueue.add("update_position", {
+      type: "POSITION_UPDATE",
+      data: {
+        ...userPosition,
+        userId: order.userId
+      }
+    })
 
-  //   eventQueue.add("update_fills", {
-  // }
+    fills.forEach((fill) => {
+      const userPosition = this.userPosition.get(fill.otherUserId)
+      eventQueue.add("update_fills", {
+        type: "POSITION_UPDATE",
+        data: {
+          ...userPosition,
+          userId: fill.otherUserId
+        }
+      })
+    })
+  }
 }

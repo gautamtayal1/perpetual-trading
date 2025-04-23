@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  phoneNumber String   @unique
-  balance     Int      @default(1000)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String     @id @default(cuid())
+  phoneNumber String     @unique
+  balance     Int        @default(10000)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   orders      Order[]
   OTPs        OTP[]
   positions   Position[]
+  trades      Trade[]
 }
 
 model Order {
@@ -33,24 +34,23 @@ model Order {
 }
 
 model Position {
-  id              String     @id @default(cuid())
-  market          String     // e.g. "BTCUSDT"
-  side            TradeSide
-  quantity        Decimal    @db.Decimal(40, 8)
-  entryPrice      Decimal    @db.Decimal(40, 8)
-  margin          Decimal    @db.Decimal(40, 8)
-  unrealizedPnl   Decimal?   @db.Decimal(40, 8)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  user            User       @relation(fields: [userId], references: [id])
-  userId          String
+  id            String    @id @default(cuid())
+  side          TradeSide
+  quantity      Int
+  entryPrice    Int
+  margin        Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
 }
 
 model Trade {
-  id          String    @id @default(cuid())
+  id          String    @id
   orderId     String
   order       Order     @relation(references: [id], fields: [orderId])
-  otherUserId String
+  userId      String
+  user        User      @relation(references: [id], fields: [userId])
   quantity    Int
   price       Float
   side        TradeSide
@@ -68,16 +68,17 @@ model OTP {
 }
 
 model Depth {
-  id           String   @id @default(cuid())
-  bids         Json
-  asks         Json
-  currentPrice Int
-  createdAt    DateTime @default(now())
+  id        String   @id @default(cuid())
+  bids      Json
+  asks      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum TradeSide {
   LONG
   SHORT
+  null
 }
 
 enum OrderStatus {
@@ -86,4 +87,3 @@ enum OrderStatus {
   PARTIALLY_FILLED
   CANCELLED
 }
-
