@@ -90,9 +90,13 @@ export class Engine {
       case "MARKET-CREATE":
 
         break
+      case "MARKET-LIQUIDATE":
+
+        break
     }
     console.log("order processed, moving to liquidator")
     this.updateTopOfBook()
+    this.positionUpdateForLiquidation()
   }
   
   createOrder(
@@ -434,6 +438,7 @@ export class Engine {
           break;
       }
     })
+    //todo: update leverage
   }
 
   publishUserBalance (userId: string) {
@@ -543,4 +548,14 @@ export class Engine {
       }
     })
   }
+
+  positionUpdateForLiquidation () {
+    const payload = Array.from(this.userPosition.entries()).map(
+      ([userId, position]) => ({ userId, ...position, leverage: position.leverage })
+    );
+    RedisManager.getInstance().publishToChannel("positionUpdate:liquidation", {
+      data: payload
+    }
+  )}
 }
+     

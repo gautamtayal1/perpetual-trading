@@ -8,7 +8,6 @@ import { Engine } from "@repo/engine"
   
   const worker = new Worker("ORDER_QUEUE", async(job) => {
     const order = job.data
-    console.log("worker processing data")
     engine.processOrder(order)
   }, {
     connection: {

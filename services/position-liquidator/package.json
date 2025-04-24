@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx src/index.ts",
     "build": "tsc"
   },
   "keywords": [],
@@ -13,9 +13,10 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@repo/engine": "workspace:*",  
+    "@repo/event-queue": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "axios": "^1.8.4",
     "bullmq": "^5.49.1",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"

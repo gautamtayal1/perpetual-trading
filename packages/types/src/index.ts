@@ -1,4 +1,4 @@
-export type OrderType = "MARKET-CREATE" | "LIMIT-CREATE" | "LIMIT-CANCEL";
+export type OrderType = "MARKET-CREATE" | "LIMIT-CREATE" | "LIMIT-CANCEL" | "MARKET-LIQUIDATE";
 export type OrderSide = "LONG" | "SHORT" | "UNINITIALIZED";
 
 export interface Order {
@@ -22,6 +22,7 @@ export interface UserPosition {
   margin: number;
   unrealizedPnl?: number
   liquidatedPrice?: number
+  leverage?: number
 }
 
 export interface UserBalance {
