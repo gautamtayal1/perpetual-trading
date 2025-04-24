@@ -21,15 +21,3 @@ export const fundingQueue = new Queue("FUNDING_QUEUE", {
   }
 })
 
-export async function scheduleFunding() {
-  await fundingQueue.add(
-    'run-funding',          
-    {},                       
-    {
-      repeat: {
-        pattern: '0 */8 * * *', 
-        tz: 'Asia/Kolkata', 
-      },
-    },
-  );
-}

@@ -1,34 +1,21 @@
-import { onMarketDataUpdate } from "./marketDataBus.js";
+import onMarketDataUpdate from "./marketDataBus.js";
 import { RedisManager } from "@repo/event-queue";
-import { Worker } from "bullmq";
-import { Engine } from "@repo/engine";
-import { scheduleFunding } from "@repo/event-queue";
-
-let latestIndex: number
-let latestMark: number
 
 onMarketDataUpdate(({top, index}) => {
-  const ask = parseInt(top.a[0])
-  const bid = parseInt(top.b[0])
-  const markPrice = medianOfThree(ask, bid, index)
-  latestIndex = index
-  latestMark = markPrice
-  
-  RedisManager.getInstance().publishToChannel('markPrice:update', markPrice)
-  }
-)
+  try {
+    const ask = parseInt(top.a[0])
+    const bid = parseInt(top.b[0])
 
-scheduleFunding().catch(console.error)
-
-new Worker("FUNDING_QUEUE", async (job) => {
-  const engine = Engine.getInstance()
-  const fundingRate = computeFundingRate(latestIndex, latestMark)
-
-  engine.applyFunding(fundingRate, latestMark)
-}, {
-  connection: {
-    host: process.env.REDIS_HOST || "localhost",
-    port: Number(process.env.REDIS_PORT) || 6379
+    const markPrice = medianOfThree(ask, bid, index)
+    const fundingRate = computeFundingRate(index, markPrice)
+    
+    RedisManager.getInstance().publishToChannel('markPrice:update', markPrice)
+    RedisManager.getInstance().publishToChannel('fundingRate:update', {
+      fundingRate,
+      markPrice
+    })
+  } catch (error) {
+    console.error("Error processing market data update:", error);
   }
 })
 

@@ -23,10 +23,8 @@ export class SubscriptionManager {
       if (message === "1" || message === "0") return;
       
       try {
-        // Try parsing as JSON first
         const payload = JSON.parse(message);
         
-        // Check if it has a data property and handle accordingly
         if (payload.data !== undefined) {
           handler(payload.data);
         } else {

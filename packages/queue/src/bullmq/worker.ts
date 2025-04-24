@@ -4,8 +4,7 @@ import { Engine } from "@repo/engine"
 
 ;(async() => {
   const engine = await Engine.create()
-  Engine.instance = engine
-  
+    console.log("engine: ", engine)
   const worker = new Worker("ORDER_QUEUE", async(job) => {
     const order = job.data
     engine.processOrder(order)

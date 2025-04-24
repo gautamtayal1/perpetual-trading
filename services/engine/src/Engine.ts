@@ -3,6 +3,7 @@ import { Orderbook } from "./Orderbook.js"
 import { S3Manager } from "./S3Manager.js"
 import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
 import { v4 as uuidv4 } from "uuid" 
+import { Worker } from "bullmq"
 
 const ENGINE_KEY = "test4-snapshot.json"
 
@@ -14,6 +15,7 @@ export class Engine {
 
   private constructor() {
     this.orderbook = null
+    this.startWorker()
   } 
 
   public static getInstance(): Engine {
@@ -24,7 +26,7 @@ export class Engine {
   }
 
   static async create() {
-    if (Engine.instance) return Engine.instance
+    if (this.instance) return this.instance
 
     const engine = new Engine()
     try {
@@ -55,6 +57,21 @@ export class Engine {
       engine.saveSnapshot()
     }, 3000);
     return engine
+  }
+
+   startWorker() {
+    new Worker("FUNDING_QUEUE", async (job) => {
+      console.log(job.data)
+      if (job.data.fundingRate && job.data.markPrice){
+        console.log("engine: ", job.data)
+        this.applyFunding(job.data.fundingRate, job.data.markPrice)
+      }
+    }, {
+      connection: {
+        host: process.env.REDIS_HOST || "localhost",
+        port: Number(process.env.REDIS_PORT) || 6379
+      }
+    })
   }
 
   private async saveSnapshot () {
@@ -633,15 +650,22 @@ export class Engine {
   }
 
   applyFunding (fundingRate: number, markPrice: number) {
+    console.log("applying funding from engine")
+    console.log(fundingRate, markPrice, "from engine")
     for (const position of this.userPosition.values()) {
+      console.log("entering for loop")
+      console.log("position: ", position)
       const side = position.side
       const quantity = position.quantity
-      
+      console.log("side: ", side)
+      console.log("quantity: ", quantity)
       const fundingPayment = markPrice * quantity * fundingRate
       if (side === "UNINITIALIZED") continue
       if (side === "LONG") {
+        console.log("fundingPayment: ", fundingPayment)
         position.margin -= fundingPayment
       } else {
+        console.log("fundingPayment: ", fundingPayment)
         position.margin += fundingPayment
       }
     }

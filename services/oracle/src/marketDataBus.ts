@@ -13,7 +13,7 @@ export function emitIndexPrice(index: IndexPrice) {
   bus.emit('index', index)
 }
 
-export function onMarketDataUpdate(
+export default function onMarketDataUpdate(
   handler: (data: { top: TopOfBook; index: IndexPrice }) => void
 ) {
   let latestTop: TopOfBook | null = null
@@ -23,6 +23,8 @@ export function onMarketDataUpdate(
     latestTop = top
     if(latestIndex) {
       handler({top, index: latestIndex})
+    } else {
+      handler({top, index: 90000})
     }
   })
   bus.on('index', index => {

@@ -1,29 +1,25 @@
 {
-  "name": "@repo/engine",
+  "name": "funding-schedular",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "exports": {
-    ".": "./src/index.ts"
-  },
   "scripts": {
-    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.787.0",
     "@repo/event-queue": "workspace:*",
-    "@repo/queue": "workspace:*",
-    "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "bullmq": "^5.49.1",
+    "node-cron": "^3.0.3",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.3",
-    "uuid": "^11.1.0"
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.11"
   }
 }
