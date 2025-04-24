@@ -85,7 +85,21 @@ export class Engine {
 
         break
       case "LIMIT-CANCEL":
-        //todo
+        this.orderbook?.cancelOrder(order.id!, order.userId)
+
+        const remainingQuantity = order.quantity - order.filled
+        const userBalance = this.userBalance.get(order.userId)
+
+        if (userBalance) {
+          userBalance.availableBalance += remainingQuantity * order.entryPrice
+          userBalance.lockedBalance -= remainingQuantity * order.entryPrice
+
+          this.publishDepthForCancel(order.entryPrice.toString())
+          this.publishUserBalance(order.userId)
+          this.updateRedisBalance(order.userId)
+          this.updateRedisDepth()
+          
+        }
         break
       case "MARKET-CREATE":
         try {
@@ -630,6 +644,19 @@ export class Engine {
         position.margin += fundingPayment
       }
     }
+  }
+
+  publishDepthForCancel(price: string) {
+    const { bids, asks } = this.orderbook!.getMarketDepth()
+    const updatedBids = bids.filter((b) => b[0] === price)
+    const updatedAsks = asks.filter((a) => a[0] === price)
+
+    RedisManager.getInstance().publishToChannel("depth:update", {
+      data: {
+        a: updatedAsks.length ? updatedAsks : [[price, "0"]],
+        b: updatedBids.length ? updatedBids : [[price, "0"]],
+      }
+    })
   }
 }
      
