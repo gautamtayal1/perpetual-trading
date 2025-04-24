@@ -85,13 +85,31 @@ export class Engine {
 
         break
       case "LIMIT-CANCEL":
-
+        //todo
         break
       case "MARKET-CREATE":
-
+        try {
+          this.createMarketOrder(
+            order.userId,
+            order.quantity,
+            order.side,
+            order.leverage
+          )
+        } catch (error) {
+          console.log(error)
+        }
         break
       case "MARKET-LIQUIDATE":
-
+        try {
+          this.createMarketOrder(
+            order.userId,
+            order.quantity,
+            order.side,
+            order.leverage
+          )
+        } catch (error) {
+          console.log(error)
+        }
         break
     }
     console.log("order processed, moving to liquidator")
@@ -134,6 +152,46 @@ export class Engine {
     this.updateRedisFills(fills, order)
     this.updateRedisPosition(fills, order)
     console.log(executedQty, fills)
+  }
+
+  createMarketOrder(
+    userId: string,
+    quantity: number,
+    side: OrderSide,
+    leverage: number
+  ) {
+    console.log("create order entered")
+    this.ensureUser(userId)
+    
+    const referencePrice = this.orderbook?.getBestOppositePrice(side, quantity)
+    if (!referencePrice) {
+      throw new Error("No reference price found")
+    }
+    this.checkAndLockBalance(userId, referencePrice, quantity, leverage, side)
+
+    const orderId = uuidv4()
+    const order = {
+      id: orderId,
+      userId,
+      side,
+      entryPrice: referencePrice,
+      quantity,
+      leverage,
+      filled: 0
+    }
+    
+    const { executedQty, fills } = this.orderbook?.addOrder(order) ?? { executedQty: 0, fills: [] }
+
+    this.updateUserPnl(fills, executedQty, order)
+    this.updateUserPosition(fills, executedQty, order)
+    this.publishUserBalance(order.userId)
+    this.publishLastTrade(fills)
+    this.publishDepth()
+    this.updateRedisBalance(userId)
+    this.updateRedisDepth()
+    this.updateRedisOrder(order)
+    this.updateRedisFills(fills, order)
+    this.updateRedisPosition(fills, order)
   }
 
   ensureUser(userId: string) {

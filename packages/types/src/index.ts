@@ -13,6 +13,17 @@ export interface Order {
   filled: number;
 };
 
+export interface MarketOrder {
+  id?: string;
+  userId: string;
+  market?: "BTCUSDT";
+  quantity: number;
+  type?: OrderType;
+  side: OrderSide;
+  leverage: number;
+  filled: number;
+};
+
 export interface UserPosition {
   market: "BTCUSDT";
   side: OrderSide;

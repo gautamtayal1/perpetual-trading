@@ -1,4 +1,4 @@
-import { Fill, Order } from "@repo/types"
+import { Fill, Order, OrderSide } from "@repo/types"
 import { v4 as uuidv4 } from "uuid"
 
 export class Orderbook {
@@ -158,6 +158,30 @@ export class Orderbook {
     if(askIndex !== -1) {
       this.asks.splice(askIndex, 1)
       console.log("order cancelled")
+    }
+  }
+
+  getBestOppositePrice (side: OrderSide, quantity: number) {
+    if (side === "LONG") {
+      let bestPrice
+      let fillQuantity = 0
+      for (let i = 0; i < this.asks.length; i++) {
+        fillQuantity += this.asks[i]?.quantity!
+        if (fillQuantity >= quantity) {
+          bestPrice = this.asks[i]?.entryPrice
+        }
+      }
+      return bestPrice
+    } else {
+      let bestPrice
+      let fillQuantity = 0
+      for (let i = 0; i < this.bids.length; i++) {
+        fillQuantity += this.bids[i]?.quantity!
+        if (fillQuantity >= quantity) {
+          bestPrice = this.bids[i]?.entryPrice
+        }
+      }
+      return bestPrice
     }
   }
 }
