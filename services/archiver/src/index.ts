@@ -85,6 +85,13 @@ import prisma from "@repo/db/client";
         }
       })
     }
+    if (type === "CANCEL_ORDER") {
+      await prisma.order.delete({
+        where: {
+          id: data.orderId
+        }
+      })
+    }
   }, {
     connection: {
         host: process.env.REDIS_HOST || "localhost",

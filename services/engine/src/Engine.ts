@@ -96,9 +96,10 @@ export class Engine {
 
           this.publishDepthForCancel(order.entryPrice.toString())
           this.publishUserBalance(order.userId)
+          this.publishOrderCancelled(order.id!)
           this.updateRedisBalance(order.userId)
           this.updateRedisDepth()
-          
+          this.cancelRedisOrder(order)
         }
         break
       case "MARKET-CREATE":
@@ -655,6 +656,23 @@ export class Engine {
       data: {
         a: updatedAsks.length ? updatedAsks : [[price, "0"]],
         b: updatedBids.length ? updatedBids : [[price, "0"]],
+      }
+    })
+  }
+
+  cancelRedisOrder (order: Order) {
+    eventQueue.add("cancel_order", {  
+      type: "CANCEL_ORDER",
+      data: {
+        orderId: order.id
+    }
+  })
+  }
+
+  publishOrderCancelled (orderId: string) {
+    RedisManager.getInstance().publishToChannel(`order:cancelled`, {
+      data: {
+        orderId
       }
     })
   }
