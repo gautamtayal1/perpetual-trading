@@ -18,15 +18,27 @@ export class SubscriptionManager {
     return this.instance
   }
 
-  subscribe<T = any>(channel: string, handler: (msg: T) => void) {
-    this.redisClient.subscribe(channel, raw => {
-      let payload
+  subscribe(channel: string, handler: (msg: any) => void) {
+    this.redisClient.subscribe(channel, (message) => {
+      if (message === "1" || message === "0") return;
+      
       try {
-        payload = JSON.parse(raw)
-        handler(payload)
+        // Try parsing as JSON first
+        const payload = JSON.parse(message);
+        
+        // Check if it has a data property and handle accordingly
+        if (payload.data !== undefined) {
+          handler(payload.data);
+        } else {
+          handler(payload);
+        }
       } catch (error) {
-        console.error("bad message on: ", channel)
-        return
+        try {
+          handler(message);
+        } catch (innerError) {
+          console.log(message);
+          console.error("bad message on: ", channel);
+        }
       }
     })
   }

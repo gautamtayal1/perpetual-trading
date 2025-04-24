@@ -69,7 +69,7 @@ model OTP {
 }
 
 model Depth {
-  id        String   @id @default(cuid()) @unique
+  id        String   @id @default("BTCUSDT")
   bids      Json
   asks      Json
   createdAt DateTime @default(now())

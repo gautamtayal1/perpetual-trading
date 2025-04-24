@@ -6,15 +6,11 @@ export type IndexPrice = number;
 const bus = new EventEmitter()
 
 export function emitTopOfBook(top: TopOfBook) {
-  console.log("emitting topOfBook", top)
   bus.emit('top', top)
-  console.log("emitted topOfBook", top)
 }
 
 export function emitIndexPrice(index: IndexPrice) {
-  console.log("emitting indexPrice", index)
   bus.emit('index', index)
-  console.log("emitted indexPrice", index)
 }
 
 export function onMarketDataUpdate(
@@ -25,14 +21,12 @@ export function onMarketDataUpdate(
 
   bus.on('top', top => {
     latestTop = top
-    console.log("top bus")
     if(latestIndex) {
       handler({top, index: latestIndex})
     }
   })
   bus.on('index', index => {
     latestIndex = index
-    console.log("index bus")
     if(latestTop) {
       handler({top: latestTop, index})
     }

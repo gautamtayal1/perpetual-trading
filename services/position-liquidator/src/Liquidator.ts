@@ -9,7 +9,7 @@ export class Liquidator {
   constructor () {
     const sub = SubscriptionManager.getInstance()
 
-    sub.subscribe<{ markPrice: number}>(
+    sub.subscribe(
       "markPrice:update", 
       ({markPrice}) => {
         this.latestMarkPrice = markPrice
@@ -17,9 +17,10 @@ export class Liquidator {
       }
     )
 
-    sub.subscribe<{ userId: string; position: any }[]>(
+    sub.subscribe(
       'position:update',
       arr => {
+        console.log("position:update", arr)
         this.userPositions.clear();
         for (const position of arr) {
           this.userPositions.set(position.userId, position.position);

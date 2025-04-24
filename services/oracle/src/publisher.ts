@@ -13,8 +13,7 @@ onMarketDataUpdate(({top, index}) => {
   const markPrice = medianOfThree(ask, bid, index)
   latestIndex = index
   latestMark = markPrice
-
-  console.log("markPrice: ", markPrice)
+  
   RedisManager.getInstance().publishToChannel('markPrice:update', markPrice)
   }
 )
@@ -26,6 +25,11 @@ new Worker("FUNDING_QUEUE", async (job) => {
   const fundingRate = computeFundingRate(latestIndex, latestMark)
 
   engine.applyFunding(fundingRate, latestMark)
+}, {
+  connection: {
+    host: process.env.REDIS_HOST || "localhost",
+    port: Number(process.env.REDIS_PORT) || 6379
+  }
 })
 
 function medianOfThree(a: number, b: number, c: number): number {
