@@ -4,7 +4,7 @@ import { S3Manager } from "./S3Manager.js"
 import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
 import { v4 as uuidv4 } from "uuid" 
 
-const ENGINE_KEY = "test3-snapshot.json"
+const ENGINE_KEY = "test4-snapshot.json"
 
 export class Engine {
   public static instance: Engine | null = null

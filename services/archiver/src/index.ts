@@ -49,17 +49,15 @@ import prisma from "@repo/db/client";
     if (type === "FILL_UPDATE") {
       await prisma.trade.createMany({
         data: [{
-          id: data.fillId,
           price: data.price,
           quantity: data.quantity,
-          side: data.side!,
+          side: data.side === "LONG" ? "SHORT" : "LONG",
           orderId: data.orderId,
           userId: data.otherUserId
           }, {
-          id: data.fillId,
           price: data.price,
           quantity: data.quantity,
-          side: data.side!,
+          side: data.side,
           orderId: data.orderId,
           userId: data.userId
         }]

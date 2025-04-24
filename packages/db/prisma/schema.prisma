@@ -47,7 +47,7 @@ model Position {
 }
 
 model Trade {
-  id          String    @id
+  id          String     @id @default(cuid())
   orderId     String
   order       Order     @relation(references: [id], fields: [orderId])
   userId      String
