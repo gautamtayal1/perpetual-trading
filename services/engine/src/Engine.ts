@@ -1,4 +1,4 @@
-import { eventQueue, RedisManager } from "@repo/event-queue"
+import { eventQueue, fundingQueue, RedisManager } from "@repo/event-queue"
 import { Orderbook } from "./Orderbook.js"
 import { S3Manager } from "./S3Manager.js"
 import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
@@ -97,6 +97,7 @@ export class Engine {
     console.log("order processed, moving to liquidator")
     this.updateTopOfBook()
     this.positionUpdateForLiquidation()
+    
   }
   
   createOrder(
@@ -507,7 +508,7 @@ export class Engine {
       eventQueue.add("update_fills", {
         type: "FILL_UPDATE",
         data: {
-          ...fills,
+          ...fill,
           side: order.side
         }
       })
@@ -553,9 +554,24 @@ export class Engine {
     const payload = Array.from(this.userPosition.entries()).map(
       ([userId, position]) => ({ userId, ...position, leverage: position.leverage })
     );
-    RedisManager.getInstance().publishToChannel("positionUpdate:liquidation", {
+    RedisManager.getInstance().publishToChannel("position:update", {
       data: payload
+    })
+  }
+
+  applyFunding (fundingRate: number, markPrice: number) {
+    for (const position of this.userPosition.values()) {
+      const side = position.side
+      const quantity = position.quantity
+      
+      const fundingPayment = markPrice * quantity * fundingRate
+      if (side === "UNINITIALIZED") continue
+      if (side === "LONG") {
+        position.margin -= fundingPayment
+      } else {
+        position.margin += fundingPayment
+      }
     }
-  )}
+  }
 }
      

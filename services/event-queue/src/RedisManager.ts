@@ -23,4 +23,8 @@ export class RedisManager {
   public publishToChannel (channel: string, message: any) {
     this.client.publish(channel, JSON.stringify(message))
   }
+
+  public updateHash(channel: string, data: Record<string, string>) {
+    this.client.hSet(channel, data)
+  }
 }

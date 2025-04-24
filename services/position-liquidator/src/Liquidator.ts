@@ -18,7 +18,7 @@ export class Liquidator {
     )
 
     sub.subscribe<{ userId: string; position: any }[]>(
-      'positionUpdate:liquidation',
+      'position:update',
       arr => {
         this.userPositions.clear();
         for (const position of arr) {
