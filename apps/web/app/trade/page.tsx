@@ -1,16 +1,25 @@
-import React from 'react';
+'use client'
+
+import React, { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import BinanceHeader from '../components/Header';
 import MarketTabs from '../components/MarketTabs';
 import ChartSection from '../components/ChartSection';
 import OrderBook from '../components/OrderBook';
 import PositionsTable from '../components/PositionTable';
+import { useWebSocket } from '../hooks/useWebSocket';
 
 const BtcusdtTradingPage: React.FC = () => {
+  
   return (
     <div>
       <div className="h-screen flex flex-col overflow-hidden bg-[#0B0B0B] text-white">
         {/* Header */}
         <BinanceHeader />
+        {/* <div>
+          {"Mark Price: " + markPrice}
+        </div> */}
         
         {/* Market Tabs */}
         <MarketTabs />

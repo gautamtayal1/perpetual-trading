@@ -535,7 +535,7 @@ export class Engine {
   publishUserBalance (userId: string) {
     const userBalance = this.userBalance.get(userId)
     if (userBalance) {
-      RedisManager.getInstance().publishToChannel(`user@${userId}`, {
+      RedisManager.getInstance().publishToChannel(`balance@${userId}`, {
         data: {
           a: userBalance.availableBalance,
           l: userBalance.lockedBalance

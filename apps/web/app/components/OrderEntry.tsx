@@ -5,31 +5,25 @@ import React, { useState } from 'react';
 const OrderEntry: React.FC = () => {
   const [leverageMode, setLeverageMode] = useState('Cross');
   const [orderType, setOrderType] = useState('Limit');
-  const [tpslChecked, setTpslChecked] = useState(false);
-  const [reduceOnlyChecked, setReduceOnlyChecked] = useState(false);
   const [price, setPrice] = useState('91461.1');
   const [size, setSize] = useState('');
 
   return (
     <div className="h-full overflow-y-auto p-2">
       {/* Order Type Tabs */}
+      <h3 className='font-medium mb-3'>
+        Place Order
+      </h3>
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center space-x-4">
           <div className="flex items-center bg-[#1E1E1E] rounded-full px-2 h-6">
             <button 
-              className={`text-xs rounded-full px-2 ${leverageMode === 'Cross' ? 'bg-[#121212]' : ''}`}
-              onClick={() => setLeverageMode('Cross')}
-            >
-              Cross
-            </button>
-            <button 
               className={`text-xs px-2 ${leverageMode === '10x' ? 'bg-[#121212]' : ''}`}
               onClick={() => setLeverageMode('10x')}
             >
-              10x
+              10x Leverage
             </button>
           </div>
-          <button className="text-xs rounded-full px-2 py-1 border border-[#2A2A2A]">S</button>
         </div>
       </div>
       
@@ -61,9 +55,7 @@ const OrderEntry: React.FC = () => {
         <div>
           <div className="flex justify-between text-xs mb-1">
             <span className="text-[#8A8A8A]">Price</span>
-            <span className="text-[#8A8A8A] text-xs">
-              <span>Auto: 14604.21 USDT</span>
-            </span>
+          
           </div>
           <div className="relative">
             <input 
@@ -91,43 +83,10 @@ const OrderEntry: React.FC = () => {
             />
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-[#8A8A8A]">BTC</div>
           </div>
-          
-          {/* Size Slider */}
-          <div className="w-full bg-[#1E1E1E] h-1 rounded mb-1 relative">
-            <div className="absolute inset-0 flex items-center justify-between px-1">
-              <div className="w-1 h-1 bg-white rounded-full"></div>
-              <div className="w-1 h-1 bg-[#8A8A8A] rounded-full"></div>
-              <div className="w-1 h-1 bg-[#8A8A8A] rounded-full"></div>
-              <div className="w-1 h-1 bg-[#8A8A8A] rounded-full"></div>
-              <div className="w-1 h-1 bg-[#8A8A8A] rounded-full"></div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Additional Options */}
-        <div className="flex space-x-4 text-xs">
-          <label className="flex items-center">
-            <input 
-              type="checkbox" 
-              checked={tpslChecked}
-              onChange={() => setTpslChecked(!tpslChecked)}
-              className="mr-1 h-3 w-3 rounded"
-            />
-            <span>TP/SL</span>
-          </label>
-          <label className="flex items-center">
-            <input 
-              type="checkbox" 
-              checked={reduceOnlyChecked}
-              onChange={() => setReduceOnlyChecked(!reduceOnlyChecked)}
-              className="mr-1 h-3 w-3 rounded"
-            />
-            <span>Reduce-Only</span>
-          </label>
         </div>
         
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-2 mt-2">
+        <div className="grid grid-cols-2 gap-4 mt-5 mx-1">
           <button className="bg-[#0ECB81] text-white rounded p-2 text-sm font-medium">Buy/Long</button>
           <button className="bg-[#F6465D] text-white rounded p-2 text-sm font-medium">Sell/Short</button>
         </div>

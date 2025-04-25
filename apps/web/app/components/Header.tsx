@@ -26,14 +26,14 @@ const BinanceHeader: React.FC = () => {
       <div className="flex items-center space-x-4">
         {session ? (
           <button 
-            className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-medium px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-yellow-500/20 transition-all duration-300" 
+            className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-medium px-3 py-1.5 rounded-lg hover:shadow-lg hover:shadow-yellow-500/20 transition-all duration-300" 
             onClick={() => signOut()}
           >
             Sign Out
           </button>
         ) : (
           <button 
-            className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-medium px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-yellow-500/20 transition-all duration-300" 
+            className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-medium px-3 py-1.5 rounded-lg hover:shadow-lg hover:shadow-yellow-500/20 transition-all duration-300" 
             onClick={() => signIn()}
           >
             Sign In

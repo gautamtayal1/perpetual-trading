@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 
 declare global {
@@ -17,6 +17,7 @@ export default function LightweightCandlestickChart({
   height?: string
 }) {
   const chartContainerRef = useRef<HTMLDivElement>(null)
+  const [scriptLoaded, setScriptLoaded] = useState(false)
 
   // simple sample data generator
   function generateCandlestickData() {
@@ -35,8 +36,8 @@ export default function LightweightCandlestickChart({
   }
 
   useEffect(() => {
-    if (!window.LightweightCharts || !chartContainerRef.current) return
-
+    if (!scriptLoaded || !chartContainerRef.current) return
+    
     // Apply background directly to container first
     if (chartContainerRef.current) {
       chartContainerRef.current.style.backgroundColor = '#000000';
@@ -86,13 +87,13 @@ export default function LightweightCandlestickChart({
       window.removeEventListener('resize', handleResize)
       chart.remove()
     }
-  }, [])
+  }, [scriptLoaded])
 
   return (
     <div className="chart-wrapper" style={{ width, height, backgroundColor: '#000000', padding: 0, margin: 0 }}>
       <Script
         src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"
-        strategy="beforeInteractive"
+        onLoad={() => setScriptLoaded(true)}
       />
       <div
         ref={chartContainerRef}

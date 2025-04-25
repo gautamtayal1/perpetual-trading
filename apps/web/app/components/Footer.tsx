@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center mb-4">
-              <span className="text-yellow-500 font-bold text-xl">CRYPTO</span>
+              <span className="text-yellow-500 font-bold text-xl">BINANCE</span>
               <span className="text-white font-bold text-xl">FUTURES</span>
             </div>
             <p className="text-gray-400 text-sm mb-4">
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
         <div className="mt-12 pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} CryptoFutures. All rights reserved.
+              © {new Date().getFullYear()} BinanceFutures. All rights reserved.
             </p>
             <div className="mt-4 md:mt-0">
               <ul className="flex flex-wrap justify-center md:justify-start space-x-6">
