@@ -7,10 +7,13 @@ const timeframes = ['15m', '1H', '4H', '1D', '1W'];
 const viewTypes = ['Original', 'Trading View', 'Depth'];
 import { useNextCutoffCountdown } from '../hooks/useNextCutOffCountdown';
 
+interface ChartSectionProps {
+  funding: number;
+  mark: number;
+}
 const ChartSection: React.FC = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('15m');
   const [activeView, setActiveView] = useState('Original');
-  const [activeTab, setActiveTab] = useState('Chart');
   const { isConnected, subscribe, unsubscribe } = useWebSocket("ws://localhost:8081");
   const [markPrice, setMarkPrice] = useState(0);
   const [indexPrice, setIndexPrice] = useState(0);
@@ -22,7 +25,6 @@ const ChartSection: React.FC = () => {
     console.log("isConnected", isConnected);
     if (isConnected) {
       subscribe("prices:update", (data) => {
-        console.log("prices:update", data);
         const parsedData = JSON.parse(data);
         const markPrice = parsedData.m.toFixed(1);
         const indexPrice = parsedData.i.toFixed(1);
@@ -63,7 +65,7 @@ const ChartSection: React.FC = () => {
             </div>
             <div className="flex flex-col items-center p-2 bg-[#121212] rounded-lg min-w-[100px]">
               <div className="text-[#8A8A8A] mb-1">Funding Rate</div>
-              <div className="text-[#0ECB81] font-medium text-sm">{fundingRate}%</div>
+              <div className={`font-medium text-sm ${fundingRate < 0 ? 'text-[#F6465D]' : 'text-[#0ECB81]'}`}>{fundingRate}%</div>
             </div>
             <div className="flex flex-col items-center p-2 bg-[#121212] rounded-lg min-w-[100px]">
               <div className="text-[#8A8A8A] mb-1">Countdown</div>
@@ -77,36 +79,20 @@ const ChartSection: React.FC = () => {
               <div className="text-[#8A8A8A] mb-1">24h Low</div>
               <div className="text-[#F6465D] font-medium text-sm">$84,914.4</div>
             </div>
-            <div className="flex flex-col items-center justify-center px-2 rounded-lg min-w-[100px] bg-[#F0B90B] hover:bg-[#F0B90B]/90 transition-all duration-300 cursor-pointer transform hover:scale-105">
-              <div className="text-black font-bold text-sm text-center">Send Mock Orders</div>
-            </div>
+            
            
           </div>
         </div>
-        
-      
       </div>
       
       {/* Chart Tabs */}
       <div className="flex border-b border-[#2A2A2A] text-sm">
         <button 
-          className={`py-2 px-4 ${activeTab === 'Chart' ? 'text-white border-b-2 border-[#F0B90B]' : 'text-gray-400'}`}
-          onClick={() => setActiveTab('Chart')}
+          className={`py-2 px-4 text-white border-b-2 border-[#F0B90B]`}
         >
           Chart
         </button>
-        <button 
-          className={`py-2 px-4 ${activeTab === 'Info' ? 'text-white border-b-2 border-[#F0B90B]' : 'text-gray-400'}`}
-          onClick={() => setActiveTab('Info')}
-        >
-          Info
-        </button>
-        <button 
-          className={`py-2 px-4 ${activeTab === 'TradingData' ? 'text-white border-b-2 border-[#F0B90B]' : 'text-gray-400'}`}
-          onClick={() => setActiveTab('TradingData')}
-        >
-          Trading Data
-        </button>
+        
       </div>
       
       {/* Chart Toolbar */}

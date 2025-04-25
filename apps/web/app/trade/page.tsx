@@ -1,14 +1,11 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import BinanceHeader from '../components/Header';
 import MarketTabs from '../components/MarketTabs';
 import ChartSection from '../components/ChartSection';
 import OrderBook from '../components/OrderBook';
 import PositionsTable from '../components/PositionTable';
-import { useWebSocket } from '../hooks/useWebSocket';
 
 const BtcusdtTradingPage: React.FC = () => {
   

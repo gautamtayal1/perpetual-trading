@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { addToQueue } from "@repo/queue";
 import prisma from "@repo/db/client";
 
 const depthRouter: Router = Router();

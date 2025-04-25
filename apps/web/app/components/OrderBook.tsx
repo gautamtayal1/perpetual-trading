@@ -32,7 +32,7 @@ const OrderBook = () => {
   return (
     <div className="bg-[#1A1A1A] rounded-md flex flex-col h-full text-white">
       {/* OrderBook Section - Top Half */}
-      <div className="h-45/100">
+      <div className="h-42/100">
         <div className="p-3 border-b border-[#2A2A2A] flex justify-between">
           <h3 className="font-medium">Order Book</h3>
           <button>

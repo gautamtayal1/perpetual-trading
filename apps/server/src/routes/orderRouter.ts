@@ -28,8 +28,8 @@ orderRouter.post("/cancel", async (req, res) => {
 orderRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const order = await prisma.order.findUnique({
-      where: { id },
+    const order = await prisma.order.findMany({
+      where: { userId: id },
       include: { trades: true }
     });
     
