@@ -14,6 +14,7 @@
     "@repo/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.1.4",
     "lightweight-charts": "^5.0.6",
+    "lucide-react": "^0.503.0",
     "next": "^15.3.0",
     "postcss": "^8.5.3",
     "react": "^19.1.0",

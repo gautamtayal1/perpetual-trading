@@ -4,34 +4,39 @@ import MarketTabs from '../components/MarketTabs';
 import ChartSection from '../components/ChartSection';
 import OrderBook from '../components/OrderBook';
 import RecentTrades from '../components/RecentTrades';
-import OrderEntry from '../components/OrderEntry';
+import PositionsTable from '../components/PositionTable';
 
 const BtcusdtTradingPage: React.FC = () => {
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-[#0B0B0B] text-white">
-      {/* Header */}
-      <BinanceHeader />
-      
-      {/* Market Tabs */}
-      <MarketTabs />
-      
-      {/* Trading Container */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Chart Section (60%) */}
-        <ChartSection />
+    <div>
+      <div className="h-screen flex flex-col overflow-hidden bg-[#0B0B0B] text-white">
+        {/* Header */}
+        <BinanceHeader />
         
-        {/* Right Panel (40%) */}
-        <div className="w-2/5 flex flex-col overflow-hidden">
-          {/* Order Book & Trades Panel */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <OrderBook />
-            <RecentTrades />
-          </div>
+        {/* Market Tabs */}
+        <MarketTabs />
+        
+        {/* Trading Container */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Chart Section (60%) */}
+          <ChartSection/>
           
-          {/* Order Entry Panel */}
-          <OrderEntry />
+          {/* Right Panel (40%) */}
+          <div className="w-1/5 flex flex-col overflow-hidden">
+            {/* Order Book & Trades Panel */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+              {/* OrderBook with OrderEntry integrated inside */}
+              <div className="h-[100vh] overflow-hidden mb-1">
+                <OrderBook />
+              </div>
+              
+              {/* Recent Trades */}
+            
+            </div>
+          </div>
         </div>
       </div>
+      <PositionsTable/>
     </div>
   );
 };

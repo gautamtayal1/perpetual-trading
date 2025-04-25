@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-
+import LightweightCandlestickChart from './TradingViewChart';
 const timeframes = ['15m', '1H', '4H', '1D', '1W'];
 const viewTypes = ['Original', 'Trading View', 'Depth'];
 
@@ -11,7 +11,7 @@ const ChartSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Chart');
 
   return (
-    <div className="w-3/5 border-r border-[#2A2A2A] flex flex-col overflow-hidden">
+    <div className="w-4/5 border-r border-[#2A2A2A] flex flex-col overflow-hidden">
       {/* Market Info */}
       <div className="flex items-center justify-between p-2 border-b border-[#2A2A2A]">
         <div className="flex items-center">
@@ -127,63 +127,12 @@ const ChartSection: React.FC = () => {
       </div>
       
       {/* Chart Content */}
-      <div className="flex-1 relative overflow-hidden p-2">
+      <div className="flex-1 relative overflow-hidden p-2" style={{ height: '500px' }}>
         {/* Order Buttons Overlay */}
-        <div className="absolute top-2 left-4 flex space-x-2 z-10">
-          <button className="bg-[#0ECB81] text-white text-xs py-2 px-3 rounded">
-            Buy/Long<br/>
-            <span className="text-xxs">93215.8</span>
-          </button>
-          <button className="bg-[#1E1E1E] text-xs py-1 px-3 rounded flex items-center border border-[#2A2A2A]">
-            Size (BTC)<br/>
-            <span className="text-xxs">Enter Size</span>
-          </button>
-          <button className="bg-[#F6465D] text-white text-xs py-2 px-3 rounded">
-            Sell/Short<br/>
-            <span className="text-xxs">93215.8</span>
-          </button>
-          <button className="text-xs py-1 px-2 rounded bg-[#121212] border border-[#2A2A2A]">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+        
         
         {/* Chart */}
-        <div className="w-full h-full flex flex-col">
-          {/* Candlestick Chart Area - 80% height */}
-          <div className="h-4/5 relative">
-            <div className="absolute right-2 text-xs text-gray-400">
-              <div>110000.0</div>
-              <div className="mt-12">105000.0</div>
-              <div className="mt-12">100000.0</div>
-              <div className="mt-12">95000.0</div>
-              <div className="mt-12">90000.0</div>
-              <div className="mt-12">85000.0</div>
-              <div className="mt-12">80000.0</div>
-              <div className="mt-12">75000.0</div>
-              <div className="mt-12">70000.0</div>
-            </div>
-            
-            {/* Candlestick chart would be implemented with a proper charting library */}
-            <div className="w-full h-full flex items-end pl-10">
-              {/* This will be replaced by a real chart implementation */}
-            </div>
-          </div>
-          
-          {/* Volume Histogram - 20% height */}
-          <div className="h-1/5 border-t border-[#2A2A2A] pt-2 flex items-end">
-            {/* This will be replaced by a real volume histogram implementation */}
-          </div>
-          
-          {/* Time axis */}
-          <div className="text-xxs text-[#8A8A8A] pt-1 flex justify-between px-10">
-            <span>02/01</span>
-            <span>03/01</span>
-            <span>04/01</span>
-            <span>05/01</span>
-          </div>
-        </div>
+        <LightweightCandlestickChart width="100%" height="100%" />
       </div>
       
       {/* Bottom Data */}
