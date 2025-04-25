@@ -3,7 +3,6 @@ import BinanceHeader from '../components/Header';
 import MarketTabs from '../components/MarketTabs';
 import ChartSection from '../components/ChartSection';
 import OrderBook from '../components/OrderBook';
-import RecentTrades from '../components/RecentTrades';
 import PositionsTable from '../components/PositionTable';
 
 const BtcusdtTradingPage: React.FC = () => {
