@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
 
 interface Position {
+  id: string;
   quantity: number;
   side: string;
   entryPrice: number;
@@ -48,7 +49,7 @@ const PositionsTable: React.FC = () => {
   }, [isConnected, subscribe, unsubscribe]);
   
   const handleCancelOrder = async (id: string, entryPrice: number, quantity: number, side: string) => {
-    const response = await axios.post(`http://localhost:8080/order/create`, {
+    await axios.post(`http://localhost:8080/order/create`, {
       id: id,
       userId: userId,
       market: "BTCUSDT",
@@ -60,6 +61,20 @@ const PositionsTable: React.FC = () => {
     });
     setOrders(orders.filter((order: any) => order.id !== id));
   }
+
+  const handleClosePosition = async (id: string, entryPrice: number, quantity: number, side: string) => {
+    await axios.post(`http://localhost:8080/order/create`, {
+      userId: userId,
+      market: "BTCUSDT",
+      entryPrice: entryPrice,
+      quantity: quantity,
+      side: side === "LONG" ? "SHORT" : "LONG",
+      type: "MARKET-CREATE",
+      leverage: "10"
+    });
+    setPosition(null);
+  }
+  
   return (
     <div className="w-full border-t border-[#2A2A2A] flex flex-col overflow-hidden bg-black pb-50">
       {/* Tab Header */}
@@ -118,7 +133,8 @@ const PositionsTable: React.FC = () => {
                 <div className={`${(position.side === "LONG" ? (markPrice - position.entryPrice) * position.quantity : (position.entryPrice - markPrice) * position.quantity) < 0 ? 'text-[#F6465D]' : 'text-[#0ECB81]'}`}>
                   {position.side === "LONG" ? (markPrice - position.entryPrice) * position.quantity : (position.entryPrice - markPrice) * position.quantity} USDT 
                 </div>
-                <button className="bg-[#F6465D] text-white rounded py-1 text-xs font-medium hover:scale-105 hover:shadow-lg hover:shadow-[#F6465D]/20 transition-all duration-300 ease-in-out active:scale-95 active:shadow-none focus:outline-none focus:ring-2 focus:ring-[#F6465D]/50">
+                <button className="bg-[#F6465D] text-white rounded py-1 text-xs font-medium hover:scale-105 hover:shadow-lg hover:shadow-[#F6465D]/20 transition-all duration-300 ease-in-out active:scale-95 active:shadow-none focus:outline-none focus:ring-2 focus:ring-[#F6465D]/50"
+                onClick={() => {handleClosePosition(position.id, position.entryPrice, position.quantity, position.side)}}>
                   Close Position
                 </button>
               </div>

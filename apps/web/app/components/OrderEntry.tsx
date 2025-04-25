@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
+import { useWebSocket } from '../hooks/useWebSocket';
 
 const OrderEntry: React.FC = () => {
   const {data: session} = useSession();
@@ -12,6 +13,7 @@ const OrderEntry: React.FC = () => {
   const [price, setPrice] = useState('94324.4');
   const [size, setSize] = useState('0.5');
   const [balance, setBalance] = useState(0);
+  const { isConnected, subscribe, unsubscribe } = useWebSocket("ws://localhost:8081");
   
   const handlePlaceOrder = (orderSide: string) => {
     try {
@@ -38,6 +40,16 @@ const OrderEntry: React.FC = () => {
     };
     fetchBalance();
   }, [userId]);
+
+  useEffect(() => {
+    console.log("isConnected", isConnected);
+    if (isConnected) {
+      subscribe("balance:update", (data) => {
+        console.log("balance update", data);
+ 
+      });
+    }
+  }, [isConnected, subscribe, unsubscribe]);
 
   return (
     <div className="h-full overflow-y-auto p-2">
@@ -133,7 +145,7 @@ const OrderEntry: React.FC = () => {
               Sell / Short
             </button>
           </div>
-          <button 
+          {/* <button 
             className="bg-[#F0B90B] text-black rounded-lg p-2 text-sm font-medium 
                      hover:scale-105 hover:shadow-lg hover:shadow-[#F0B90B]/20 
                      transition-all duration-300 ease-in-out 
@@ -142,7 +154,7 @@ const OrderEntry: React.FC = () => {
             onClick={() => handlePlaceOrder('MOCK')}
           >
             Send Mock Orders
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
