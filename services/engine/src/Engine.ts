@@ -555,6 +555,7 @@ export class Engine {
   }
 
   publishDepth () {
+    console.log("publishing depth")
     const { asks, bids } = this.orderbook?.getMarketDepth() ?? { asks: [], bids: [] }
     RedisManager.getInstance().publishToChannel(`depth:update`, {
       data: {
@@ -562,6 +563,7 @@ export class Engine {
         b: bids,
       }
     })
+    console.log("depth published")
   }
 
   updateRedisBalance (userId: string) {

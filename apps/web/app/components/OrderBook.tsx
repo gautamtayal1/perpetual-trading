@@ -4,7 +4,7 @@ import { MoreHorizontal } from "lucide-react";
 import OrderEntry from "./OrderEntry";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import { useWebSocket } from "../hooks/useWebSocket";
 interface OrderData {
   price: string;
   size: string;
@@ -13,6 +13,7 @@ interface OrderData {
 const OrderBook = () => {
   const [asks, setAsks] = useState<OrderData[]>([]);
   const [bids, setBids] = useState<OrderData[]>([]);
+  const { isConnected, subscribe, unsubscribe } = useWebSocket("ws://localhost:8081");
 
   useEffect(() => {
     const fetchDepth = async () => {
@@ -27,7 +28,17 @@ const OrderBook = () => {
     };
     fetchDepth();
   }, []);
-  
+
+  useEffect(() => {
+    console.log("isConnected", isConnected);
+    if (isConnected) {
+      subscribe("depth:update", (data) => {
+        console.log("depth update", data);
+        setAsks(data.data.a);
+        setBids(data.data.b);
+      });
+    }
+  }, [isConnected, subscribe, unsubscribe]);
   
   return (
     <div className="bg-[#1A1A1A] rounded-md flex flex-col h-full text-white">

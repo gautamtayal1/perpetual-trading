@@ -34,7 +34,6 @@ const OrderEntry: React.FC = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       const response = await axios.get(`http://localhost:8080/balance/${userId}`);
-      console.log(response);
       setBalance(response.data.user.balance);
     };
     fetchBalance();

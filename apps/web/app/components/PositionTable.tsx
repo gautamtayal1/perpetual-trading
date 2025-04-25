@@ -24,27 +24,22 @@ const PositionsTable: React.FC = () => {
   const [markPrice, setMarkPrice] = useState(0);
   
   useEffect(() => {
-    console.log(userId);
     const fetchPosition = async () => {
       const response = await axios.get(`http://localhost:8080/position/${userId}`);
-      console.log(response.data);
       setPosition(response.data);
     };
     fetchPosition();
   }, [userId]);
 
   useEffect(() => {
-    console.log(userId);
     const fetchOrders = async () => {
       const response = await axios.get(`http://localhost:8080/order/${userId}`);
-      console.log(response.data);
       setOrders(response.data);
     };
     fetchOrders();
   }, [userId]);
 
   useEffect(() => {
-    console.log("isConnected", isConnected);
     if (isConnected) {
       subscribe("fundingRate:update", (data) => {
         setMarkPrice(data.markPrice.toFixed(1));
@@ -63,7 +58,6 @@ const PositionsTable: React.FC = () => {
       type: "LIMIT-CANCEL",
       leverage: "10"
     });
-    console.log(response.data);
     setOrders(orders.filter((order: any) => order.id !== id));
   }
   return (
