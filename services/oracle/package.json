@@ -16,7 +16,7 @@
     "@repo/event-queue": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/engine": "workspace:*",
-    "bullmq": "^5.49.1",
+    "bullmq": "^5.49.1",  
     "ioredis": "^5.6.1",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
