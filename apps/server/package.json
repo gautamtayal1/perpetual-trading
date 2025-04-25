@@ -13,11 +13,16 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@repo/queue": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.1",
-    "@repo/queue": "workspace:*",
+    "@repo/db": "workspace:*",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17"
   }
 }

@@ -1,12 +1,35 @@
 'use client'
 
 import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
 
 const OrderEntry: React.FC = () => {
+  const {data: session} = useSession();
+
   const [leverageMode, setLeverageMode] = useState('Cross');
-  const [orderType, setOrderType] = useState('Limit');
-  const [price, setPrice] = useState('91461.1');
-  const [size, setSize] = useState('');
+  const [orderType, setOrderType] = useState('');
+  const [price, setPrice] = useState('94324.4');
+  const [size, setSize] = useState('0.5');
+
+  
+  const handlePlaceOrder = (orderSide: string) => {
+    try {
+      console.log(session?.user?.id);
+      const order = axios.post('http://localhost:8080/order/create', {
+        userId: session?.user?.id,
+        market: "BTCUSDT",
+        entryPrice: Number(price),
+        quantity: Number(size),
+        side: orderSide,
+        type: orderType,
+        leverage: "10"
+      });
+      console.log(order);
+    } catch (error) {
+      console.error('Error placing order:', error);
+    }
+  };
 
   return (
     <div className="h-full overflow-y-auto p-2">
@@ -30,25 +53,18 @@ const OrderEntry: React.FC = () => {
       {/* Order Type Buttons */}
       <div className="flex border-b border-[#2A2A2A] mb-2">
         <button 
-          className={`text-xs px-3 py-1 ${orderType === 'Limit' ? 'border-b-2 border-[#F0B90B]' : 'text-[#8A8A8A]'}`}
-          onClick={() => setOrderType('Limit')}
+          className={`text-xs px-3 py-1 ${orderType === 'LIMIT-CREATE' ? 'border-b-2 border-[#F0B90B]' : 'text-[#8A8A8A]'}`}
+          onClick={() => setOrderType('LIMIT-CREATE')}
         >
           Limit
         </button>
         <button 
-          className={`text-xs px-3 py-1 ${orderType === 'Market' ? 'border-b-2 border-[#F0B90B]' : 'text-[#8A8A8A]'}`}
-          onClick={() => setOrderType('Market')}
+          className={`text-xs px-3 py-1 ${orderType === 'MARKET-CREATE' ? 'border-b-2 border-[#F0B90B]' : 'text-[#8A8A8A]'}`}
+          onClick={() => setOrderType('MARKET-CREATE')}
         >
           Market
         </button>
-        <button 
-          className={`text-xs px-3 py-1 ${orderType === 'StopLimit' ? 'border-b-2 border-[#F0B90B]' : 'text-[#8A8A8A]'}`}
-          onClick={() => setOrderType('StopLimit')}
-        >
-          Stop Limit
-        </button>
       </div>
-      
       {/* Order Form */}
       <div className="space-y-2">
         {/* Price Input */}
@@ -69,36 +85,48 @@ const OrderEntry: React.FC = () => {
         </div>
         
         {/* Size Input */}
-        <div>
-          <div className="flex justify-between text-xs mb-1">
+        <div className="py-1">
+          <div className="flex justify-between text-xs mb-2">
             <span className="text-[#8A8A8A]">Size</span>
           </div>
-          <div className="relative mb-1">
+          <div className="relative mb-2">
             <input 
               type="text" 
               placeholder="0.000" 
               value={size}
               onChange={(e) => setSize(e.target.value)}
-              className="w-full bg-[#1E1E1E] border border-[#2A2A2A] rounded p-1 text-sm"
+              className="w-full bg-[#1E1E1E] border border-[#2A2A2A] rounded p-2 text-sm h-10"
             />
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-[#8A8A8A]">BTC</div>
+          </div>
+          <div className="flex justify-between text-xs text-[#8A8A8A]">
+            <span>Min: 0.001 BTC</span>
+            <span>Max: 1000 BTC</span>
           </div>
         </div>
         
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-4 mt-5 mx-1">
-          <button className="bg-[#0ECB81] text-white rounded p-2 text-sm font-medium">Buy/Long</button>
-          <button className="bg-[#F6465D] text-white rounded p-2 text-sm font-medium">Sell/Short</button>
-        </div>
-        
-        {/* Trade Info Footer */}
-        <div className="flex justify-between text-xs text-[#8A8A8A] mt-1">
-          <div>
-            <span>Liq Price — USDT</span>
-          </div>
-          <div>
-            <span>Cost 0.00 USDT</span>
-          </div>
+          <button 
+            className="bg-[#0ECB81] text-bal rounded-lg p-2 text-sm font-medium 
+                     hover:scale-105 hover:shadow-lg hover:shadow-[#0ECB81]/20 
+                     transition-all duration-300 ease-in-out 
+                     active:scale-95 active:shadow-none
+                     focus:outline-none focus:ring-2 focus:ring-[#0ECB81]/50"
+            onClick={() => handlePlaceOrder('LONG')}
+          >
+            Buy / Long
+          </button>
+          <button 
+            className="bg-[#F6465D] text-white rounded-lg p-2 text-sm font-medium 
+                     hover:scale-105 hover:shadow-lg hover:shadow-[#F6465D]/20 
+                     transition-all duration-300 ease-in-out 
+                     active:scale-95 active:shadow-none
+                     focus:outline-none focus:ring-2 focus:ring-[#F6465D]/50"
+            onClick={() => handlePlaceOrder('SHORT')}
+          >
+            Sell / Short
+          </button>
         </div>
       </div>
     </div>

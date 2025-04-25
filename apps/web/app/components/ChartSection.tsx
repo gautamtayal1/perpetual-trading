@@ -14,6 +14,7 @@ const ChartSection: React.FC = () => {
   const { isConnected, subscribe, unsubscribe } = useWebSocket("ws://localhost:8081");
   const [markPrice, setMarkPrice] = useState(0);
   const [indexPrice, setIndexPrice] = useState(0);
+  const [fundingRate, setFundingRate] = useState(0);
   const { hours, minutes, seconds } = useNextCutoffCountdown()
   const pad = (n: number) => n.toString().padStart(2, '0')
 
@@ -25,8 +26,10 @@ const ChartSection: React.FC = () => {
         const parsedData = JSON.parse(data);
         const markPrice = parsedData.m.toFixed(1);
         const indexPrice = parsedData.i.toFixed(1);
-        setMarkPrice(markPrice);
-        setIndexPrice(indexPrice);
+        const fundingRate = (parsedData.r * 100).toFixed(4);
+        setMarkPrice(Number(markPrice));
+        setIndexPrice(Number(indexPrice));
+        setFundingRate(Number(fundingRate));
       });
     }
   }, [isConnected, subscribe, unsubscribe]);
@@ -60,7 +63,7 @@ const ChartSection: React.FC = () => {
             </div>
             <div className="flex flex-col items-center p-2 bg-[#121212] rounded-lg min-w-[100px]">
               <div className="text-[#8A8A8A] mb-1">Funding Rate</div>
-              <div className="text-[#0ECB81] font-medium text-sm">0.01%</div>
+              <div className="text-[#0ECB81] font-medium text-sm">{fundingRate}%</div>
             </div>
             <div className="flex flex-col items-center p-2 bg-[#121212] rounded-lg min-w-[100px]">
               <div className="text-[#8A8A8A] mb-1">Countdown</div>
@@ -74,16 +77,14 @@ const ChartSection: React.FC = () => {
               <div className="text-[#8A8A8A] mb-1">24h Low</div>
               <div className="text-[#F6465D] font-medium text-sm">$84,914.4</div>
             </div>
+            <div className="flex flex-col items-center justify-center px-2 rounded-lg min-w-[100px] bg-[#F0B90B] hover:bg-[#F0B90B]/90 transition-all duration-300 cursor-pointer transform hover:scale-105">
+              <div className="text-black font-bold text-sm text-center">Send Mock Orders</div>
+            </div>
+           
           </div>
         </div>
         
-        <div className="flex items-center space-x-2">
-          <button className="bg-[#121212] p-1 rounded">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-            </svg>
-          </button>
-        </div>
+      
       </div>
       
       {/* Chart Tabs */}

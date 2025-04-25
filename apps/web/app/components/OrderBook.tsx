@@ -1,47 +1,34 @@
+"use client";
+
 import { MoreHorizontal } from "lucide-react";
 import OrderEntry from "./OrderEntry";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 interface OrderData {
   price: string;
   size: string;
 }
 
-// Static order book data to match the screenshot
-const sellOrders: OrderData[] = [
-  { price: "92859.2", size: "0.043" },
-  { price: "92859.1", size: "0.400" },
-  { price: "92859.0", size: "0.002" },
-  { price: "92858.9", size: "0.004" },
-  { price: "92858.8", size: "0.023" },
-  { price: "92859.2", size: "0.043" },
-  { price: "92859.1", size: "0.400" },
-  { price: "92859.0", size: "0.002" },
-  { price: "92858.9", size: "0.004" },
-  { price: "92858.8", size: "0.023" },
-  { price: "92859.1", size: "0.400" },
-  { price: "92859.0", size: "0.002" },
-  { price: "92858.9", size: "0.004" },
-  { price: "92858.8", size: "0.023" },
-];
-
-const buyOrders: OrderData[] = [
-  { price: "92858.5", size: "2.405" },
-  { price: "92858.4", size: "0.188" },
-  { price: "92858.3", size: "0.002" },
-  { price: "92858.2", size: "0.002" },
-  { price: "92858.1", size: "0.002" },
-  { price: "92858.5", size: "2.405" },
-  { price: "92858.4", size: "0.188" },
-  { price: "92858.3", size: "0.002" },
-  { price: "92858.2", size: "0.002" },
-  { price: "92858.1", size: "0.002" },
-  { price: "92858.4", size: "0.188" },
-  { price: "92858.3", size: "0.002" },
-  { price: "92858.2", size: "0.002" },
-  { price: "92858.1", size: "0.002" },
-];
-
 const OrderBook = () => {
+  const [asks, setAsks] = useState<OrderData[]>([]);
+  const [bids, setBids] = useState<OrderData[]>([]);
+
+  useEffect(() => {
+    const fetchDepth = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/depth");
+        console.log(response.data);
+        setAsks(response.data.asks);
+        setBids(response.data.bids);
+      } catch (error) {
+        console.error("Error fetching depth:", error);
+      }
+    };
+    fetchDepth();
+  }, []);
+  
+  
   return (
     <div className="bg-[#1A1A1A] rounded-md flex flex-col h-full text-white">
       {/* OrderBook Section - Top Half */}
@@ -65,13 +52,13 @@ const OrderBook = () => {
             
             {/* Sell Orders List */}
             <div className="overflow-y-auto" style={{ maxHeight: "160px" }}>
-              {sellOrders.map((order, index) => (
+              {asks.map((order: any, index) => (
                 <div 
                   key={index} 
                   className="px-3 py-1 grid grid-cols-2 text-xs hover:bg-[#212121] relative"
                 >
-                  <div className="text-red-500 z-10">{order.price}</div>
-                  <div className="text-right z-10">{order.size}</div>
+                  <div className="text-red-500 z-10">{order[0]}</div>
+                  <div className="text-right z-10">{order[1]}</div>
                   <div 
                     className="absolute top-0 right-0 h-full bg-red-800/10" 
                     style={{ width: `${Math.min(parseFloat(order.size) * 30, 100)}%` }}
@@ -91,13 +78,13 @@ const OrderBook = () => {
             
             {/* Buy Orders List */}
             <div className="overflow-y-auto" style={{ maxHeight: "160px" }}>
-              {buyOrders.map((order, index) => (
+              {bids.map((order: any, index) => (
                 <div 
                   key={index} 
                   className="px-3 py-1 grid grid-cols-2 text-xs hover:bg-[#212121] relative"
                 >
-                  <div className="text-green-500 z-10">{order.price}</div>
-                  <div className="text-right z-10">{order.size}</div>
+                  <div className="text-green-500 z-10">{order[0]}</div>
+                  <div className="text-right z-10">{order[1]}</div>
                   <div 
                     className="absolute top-0 left-0 h-full bg-green-800/10" 
                     style={{ width: `${Math.min(parseFloat(order.size) * 30, 100)}%` }}

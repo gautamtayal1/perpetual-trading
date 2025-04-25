@@ -11,8 +11,10 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/db": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.1.4",
+    "axios": "^1.8.4",
     "framer-motion": "^12.9.1",
     "lightweight-charts": "^5.0.6",
     "lucide-react": "^0.503.0",
@@ -21,8 +23,7 @@
     "postcss": "^8.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tailwindcss": "^4.1.4",
-    "@repo/db": "workspace:*"
+    "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
