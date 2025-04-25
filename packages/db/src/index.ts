@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+//@ts-ignore
+import { PrismaClient } from "../node_modules/@prisma/xxx-client"
 
 const prismaClientSingleton = () => {
   return new PrismaClient({

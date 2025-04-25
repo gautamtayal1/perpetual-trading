@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 
 const Hero: React.FC = () => {
@@ -26,41 +27,58 @@ const Hero: React.FC = () => {
           
           <div className="flex flex-col md:flex-row gap-4 mb-12">
             <div className="mt-4 md:mt-0">
+              <Link href="/trade">
               <button 
                 className="w-full md:w-auto bg-gradient-to-r from-yellow-500 to-yellow-400 px-8 py-4 rounded-xl text-base font-medium text-black shadow-glow hover:shadow-xl transition-all duration-300 ease-out transform hover:-translate-y-1 hover:scale-105 active:scale-95"
               >
                 Start Trading Now
               </button>
+              </Link>
             </div>
             <div className="mt-4 md:mt-0">
+              <Link href="/auth">
               <button 
                 className="w-full md:w-auto bg-transparent border-2 border-yellow-500 px-8 py-4 rounded-xl text-base font-medium text-white shadow-glow hover:shadow-xl transition-all duration-300 ease-out transform hover:-translate-y-1 hover:scale-105 active:scale-95"
               >
                 Create Account
               </button>
+              </Link>
             </div>
           </div>
-
-          <div className="w-full max-w-4xl glass-effect p-6 rounded-xl border border-gray-800/50 hover:border-yellow-500/50 transition-all duration-300 group relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-yellow-500/5 to-yellow-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(245,158,11,0.1),_transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            
-            <div className="flex flex-col md:flex-row items-center justify-between relative z-10">
-              <div className="flex items-center space-x-4 mb-4 md:mb-0">
-                <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center group-hover:bg-yellow-500/30 transition-all duration-300 shadow-lg group-hover:shadow-yellow-500/20">
-                  <span className="text-2xl group-hover:scale-110 transition-transform duration-300">₿</span>
-                </div>
-                <div>
-                  <h3 className="font-display font-medium text-xl text-white group-hover:text-yellow-500 transition-colors duration-300">BTC/USDT</h3>
-                  <p className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Bitcoin / Tether</p>
+          <div className="w-full max-w-4xl">
+            <Link href="/trade" className="block">
+              <div className="glass-effect p-6 rounded-xl border border-gray-800/50 hover:border-yellow-500/50 transition-all duration-300 group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-yellow-500/5 to-yellow-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(245,158,11,0.1),_transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div className="flex flex-col md:flex-row items-center justify-between relative z-10">
+                  <div className="flex items-center space-x-4 mb-4 md:mb-0">
+                    <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center group-hover:bg-yellow-500/30 transition-all duration-300 shadow-lg group-hover:shadow-yellow-500/20">
+                      <span className="text-2xl group-hover:scale-110 transition-transform duration-300">₿</span>
+                    </div>
+                    <div>
+                      <h3 className="font-display font-medium text-xl text-white group-hover:text-yellow-500 transition-colors duration-300">BTC/USDT</h3>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4">
+                    <div className="flex flex-col items-end">
+                      <span className="text-2xl font-bold text-white group-hover:text-yellow-500 transition-colors duration-300">$90,850.00</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-400">24h</span>
+                        <span className="text-green-500 group-hover:scale-110 transition-transform duration-300 bg-green-500/10 px-2 py-1 rounded-full">
+                          +2.45%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="h-12 w-px bg-gray-700"></div>
+                    <div className="text-sm text-gray-400">
+                      <span>Vol: 24.5K BTC</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <div className="flex flex-col items-end">
-                <span className="text-2xl font-bold text-white group-hover:text-yellow-500 transition-colors duration-300">$42,850.00</span>
-                <span className="text-green-500 group-hover:scale-110 transition-transform duration-300 bg-green-500/10 px-2 py-1 rounded-full">+2.45%</span>
-              </div>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

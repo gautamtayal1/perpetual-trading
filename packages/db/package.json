@@ -14,8 +14,10 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "dependencies": {
+    "@prisma/client": "^6.6.0"
+  },
   "devDependencies": {
-    "@prisma/client": "^6.6.0",
     "@repo/typescript-config": "workspace:*",
     "prisma": "^6.6.0"
   }
