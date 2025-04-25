@@ -5,6 +5,7 @@ import LightweightCandlestickChart from './TradingViewChart';
 import { useWebSocket } from '../hooks/useWebSocket';
 const timeframes = ['15m', '1H', '4H', '1D', '1W'];
 const viewTypes = ['Original', 'Trading View', 'Depth'];
+import { useNextCutoffCountdown } from '../hooks/useNextCutOffCountdown';
 
 const ChartSection: React.FC = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('15m');
@@ -13,6 +14,8 @@ const ChartSection: React.FC = () => {
   const { isConnected, subscribe, unsubscribe } = useWebSocket("ws://localhost:8081");
   const [markPrice, setMarkPrice] = useState(0);
   const [indexPrice, setIndexPrice] = useState(0);
+  const { hours, minutes, seconds } = useNextCutoffCountdown()
+  const pad = (n: number) => n.toString().padStart(2, '0')
 
   useEffect(() => {
     console.log("isConnected", isConnected);
@@ -55,9 +58,13 @@ const ChartSection: React.FC = () => {
               <div className="text-[#8A8A8A] mb-1">Index<sup>*</sup></div>
               <div className="text-[#0ECB81] font-medium text-sm">${indexPrice}</div>
             </div>
-            <div className="flex flex-col items-center p-2 bg-[#121212] rounded-lg min-w-[120px]">
-              <div className="text-[#8A8A8A] mb-1">Funding / Countdown</div>
-              <div className="text-[#0ECB81] font-medium text-sm">0.01% / 01:59:00</div>
+            <div className="flex flex-col items-center p-2 bg-[#121212] rounded-lg min-w-[100px]">
+              <div className="text-[#8A8A8A] mb-1">Funding Rate</div>
+              <div className="text-[#0ECB81] font-medium text-sm">0.01%</div>
+            </div>
+            <div className="flex flex-col items-center p-2 bg-[#121212] rounded-lg min-w-[100px]">
+              <div className="text-[#8A8A8A] mb-1">Countdown</div>
+              <div className="text-[#0ECB81] font-medium text-sm">{pad(hours)}:{pad(minutes)}:{pad(seconds)}</div>
             </div>
             <div className="flex flex-col items-center p-2 bg-[#121212] rounded-lg min-w-[100px]">
               <div className="text-[#8A8A8A] mb-1">24h High</div>
