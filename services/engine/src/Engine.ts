@@ -5,7 +5,7 @@ import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
 import { v4 as uuidv4 } from "uuid" 
 import { Worker } from "bullmq"
 
-const ENGINE_KEY = "test4-snapshot.json"
+const ENGINE_KEY = "test5-snapshot.json"
 
 export class Engine {
   public static instance: Engine | null = null
@@ -61,9 +61,7 @@ export class Engine {
 
    startWorker() {
     new Worker("FUNDING_QUEUE", async (job) => {
-      console.log(job.data)
       if (job.data.fundingRate && job.data.markPrice){
-        console.log("engine: ", job.data)
         this.applyFunding(job.data.fundingRate, job.data.markPrice)
       }
     }, {
@@ -229,7 +227,7 @@ export class Engine {
   ensureUser(userId: string) {
     if (!this.userBalance.has(userId)) {
       this.userBalance.set(userId, {
-        availableBalance: 100000,
+        availableBalance: 1000000,
         lockedBalance: 0
       })
     }

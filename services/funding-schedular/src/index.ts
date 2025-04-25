@@ -13,7 +13,7 @@ SubscriptionManager.getInstance().subscribe(
   }
 )
 
-cron.schedule('* * * * *', () => {
+cron.schedule('0 0,8,16 * * *', () => {
   console.log("cron job running")
   console.log("latestFundingRate: ", latestFundingRate)
   console.log("latestMarkPrice: ", latestMarkPrice)

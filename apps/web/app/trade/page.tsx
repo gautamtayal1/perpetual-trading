@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react';
 import BinanceHeader from '../components/Header';
 import MarketTabs from '../components/MarketTabs';
@@ -8,17 +6,11 @@ import OrderBook from '../components/OrderBook';
 import PositionsTable from '../components/PositionTable';
 
 const BtcusdtTradingPage: React.FC = () => {
-  
   return (
     <div>
       <div className="h-screen flex flex-col overflow-hidden bg-[#0B0B0B] text-white">
         {/* Header */}
         <BinanceHeader />
-        {/* <div>
-          {"Mark Price: " + markPrice}
-        </div> */}
-        
-        {/* Market Tabs */}
         <MarketTabs />
         
         {/* Trading Container */}

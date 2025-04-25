@@ -22,12 +22,12 @@ export default function LightweightCandlestickChart({
   // simple sample data generator
   function generateCandlestickData() {
     const data: { time: number; open: number; high: number; low: number; close: number }[] = []
-    let t = Math.floor(Date.now() / 1000) - 60 * 60 * 24 * 30 // 30 days ago
+    let t = Math.floor(Date.now() / 1000) - 60 * 60 * 24 * 30 
     let prevClose = 50
     for (let i = 0; i < 5000; i++) {
-      const open = prevClose + (Math.random() - 0.5) * 2
-      const high = open + Math.random() * 2
-      const low = open - Math.random() * 2
+      const open = prevClose + (Math.random() - 0.5) * 200
+      const high = open + Math.random() * 200
+      const low = open - Math.random() * 200
       const close = low + Math.random() * (high - low)
       data.push({ time: t + i * 60 * 60, open, high, low, close })
       prevClose = close

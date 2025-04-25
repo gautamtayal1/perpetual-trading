@@ -10,8 +10,8 @@ const OrderEntry: React.FC = () => {
   const userId = session?.user?.id;
 
   const [orderType, setOrderType] = useState('LIMIT-CREATE');
-  const [price, setPrice] = useState('94324.4');
-  const [size, setSize] = useState('0.5');
+  const [price, setPrice] = useState('95000');
+  const [size, setSize] = useState('1');
   const [balance, setBalance] = useState(0);
   const { isConnected, subscribe, unsubscribe } = useWebSocket("ws://localhost:8081");
   
@@ -44,12 +44,11 @@ const OrderEntry: React.FC = () => {
   useEffect(() => {
     console.log("isConnected", isConnected);
     if (isConnected) {
-      subscribe("balance:update", (data) => {
-        console.log("balance update", data);
- 
+      subscribe(`balance@${userId}`, (data) => {
+        setBalance(data.data.a);
       });
     }
-  }, [isConnected, subscribe, unsubscribe]);
+  }, [isConnected, subscribe, unsubscribe, userId]);
 
   return (
     <div className="h-full overflow-y-auto p-2">
@@ -99,7 +98,7 @@ const OrderEntry: React.FC = () => {
               onChange={(e) => setPrice(e.target.value)}
               className="w-full bg-[#1E1E1E] border border-[#2A2A2A] rounded p-1 text-sm"
             />
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-[#8A8A8A]">USDT</div>
+            <div className="absolute right-2 top-7/10 transform -translate-y-1/2 text-xs text-[#8A8A8A]">USDT</div>
           </div>}
         </div>
         
