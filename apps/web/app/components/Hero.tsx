@@ -1,9 +1,11 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react';
 
 const Hero: React.FC = () => {
+  const { data: session } = useSession()
   return (
     <div className="relative bg-black overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black opacity-70"></div>
@@ -36,13 +38,14 @@ const Hero: React.FC = () => {
               </Link>
             </div>
             <div className="mt-4 md:mt-0">
-              <Link href="/auth">
-              <button 
+              {!session &&
+                <Link href="/auth">
+                <button 
                 className="w-full md:w-auto bg-transparent border-2 border-yellow-500 px-8 py-4 rounded-xl text-base font-medium text-white shadow-glow hover:shadow-xl transition-all duration-300 ease-out transform hover:-translate-y-1 hover:scale-105 active:scale-95"
               >
                 Create Account
               </button>
-              </Link>
+              </Link>}
             </div>
           </div>
           <div className="w-full max-w-4xl">
