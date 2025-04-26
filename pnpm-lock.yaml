@@ -169,6 +169,30 @@ importers:
         specifier: ^8.29.0
         version: 8.29.0(eslint@9.24.0(jiti@2.4.2))(typescript@5.8.3)
 
+  packages/event-queue:
+    dependencies:
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      bull:
+        specifier: ^4.16.5
+        version: 4.16.5
+      bullmq:
+        specifier: ^5.49.1
+        version: 5.49.1
+      redis:
+        specifier: ^4.7.0
+        version: 4.7.0
+      tsx:
+        specifier: ^4.19.3
+        version: 4.19.3
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   packages/queue:
     dependencies:
       '@repo/engine':
@@ -269,10 +293,7 @@ importers:
         version: 3.787.0
       '@repo/event-queue':
         specifier: workspace:*
-        version: link:../event-queue
-      '@repo/queue':
-        specifier: workspace:*
-        version: link:../../packages/queue
+        version: link:../../packages/event-queue
       '@repo/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -292,35 +313,11 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0
 
-  services/event-queue:
-    dependencies:
-      '@repo/types':
-        specifier: workspace:*
-        version: link:../../packages/types
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      bull:
-        specifier: ^4.16.5
-        version: 4.16.5
-      bullmq:
-        specifier: ^5.49.1
-        version: 5.49.1
-      redis:
-        specifier: ^4.7.0
-        version: 4.7.0
-      tsx:
-        specifier: ^4.19.3
-        version: 4.19.3
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-
   services/funding-schedular:
     dependencies:
       '@repo/event-queue':
         specifier: workspace:*
-        version: link:../event-queue
+        version: link:../../packages/event-queue
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -345,7 +342,7 @@ importers:
         version: link:../engine
       '@repo/event-queue':
         specifier: workspace:*
-        version: link:../event-queue
+        version: link:../../packages/event-queue
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -373,7 +370,7 @@ importers:
     dependencies:
       '@repo/event-queue':
         specifier: workspace:*
-        version: link:../event-queue
+        version: link:../../packages/event-queue
       '@repo/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -410,7 +407,7 @@ importers:
     devDependencies:
       '@repo/event-queue':
         specifier: workspace:*
-        version: link:../event-queue
+        version: link:../../packages/event-queue
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1

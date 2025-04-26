@@ -3,9 +3,10 @@
   "compilerOptions": {
     "declaration": true,
     "declarationMap": true,
+    "composite": true,
+    "incremental": true,
     "esModuleInterop": true,
-    "incremental": false,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "lib": ["es2022", "DOM", "DOM.Iterable"],
     "module": "NodeNext",
     "moduleDetection": "force",
@@ -14,6 +15,33 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022"
-  }
+    "target": "ES2022",
+    "baseUrl": ".",
+    "paths": {
+      "@repo/types": ["packages/types/src"],
+      "@repo/db": ["packages/db/src"],
+      "@repo/event-queue": ["packages/event-queue/src"],
+      "@repo/engine": ["services/engine/src"],
+      "@repo/queue": ["packages/queue/src"],
+      "@repo/funding-schedular": ["services/funding-schedular/src"],
+      "@repo/oracle": ["services/oracle/src"],
+      "@repo/position-liquidator": ["services/position-liquidator/src"],
+      "@repo/wss": ["services/wss/src"],
+      "@repo/server": ["apps/server/src"],
+      "web": ["apps/web"]
+    }
+  },
+  "references": [
+    { "path": "packages/types" },
+    { "path": "packages/db" },
+    { "path": "packages/event-queue" },
+    { "path": "services/engine" },
+    { "path": "packages/queue" },
+    { "path": "services/funding-schedular" },
+    { "path": "services/oracle" },
+    { "path": "services/position-liquidator" },
+    { "path": "services/wss" },
+    { "path": "apps/server" },
+    { "path": "apps/web" }
+  ]
 }

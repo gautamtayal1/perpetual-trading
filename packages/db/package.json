@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "exports": {
-    "./client": "./src/index.ts"
+    "./client": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",

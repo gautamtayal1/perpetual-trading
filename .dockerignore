@@ -1,0 +1,17 @@
+# Node & workspace
+node_modules
+dist
+
+# Build outputs
+.next
+.turbo
+*.log
+
+# OS / Editor
+.DS_Store
+.vscode
+.idea
+
+# Git
+.git
+.gitignore

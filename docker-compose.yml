@@ -24,54 +24,17 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
-    container_name: binance-server
+    container_name: server
     ports:
       - "8080:8080"
     depends_on:
-      - redis
-    environment:
-      - REDIS_HOST=binance-redis
-      - REDIS_PORT=6379
-      - REDIS_URL=redis://binance-redis:6379
-      - DATABASE_URL="postgresql://user:password@localhost:5441/postgres?schema=public"
-  web: 
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile
-    container_name: probo-web
-    ports:
-      - "3000:3000"
-    depends_on:
-      - server
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
-      - REDIS_URL=redis://probo-redis:6379
-      - DATABASE_URL=postgresql://probo:probo123@probo-postgres:5432/probodb
-
-  order-queue:
-    build:
-      context: .
-      dockerfile: packages/order-queue/Dockerfile
-    container_name: probo-order-queue
-    depends_on:
-      - redis
-    environment:
-      - REDIS_HOST=probo-redis
-      - REDIS_PORT=6379
-      - REDIS_URL=redis://probo-redis:6379
-
-  archiver:
-    build: 
-      context: .
-      dockerfile: services/archiver/Dockerfile
-    container_name: probo-archiver
-    depends_on:
-      - redis
+      - redis-stack
       - postgres
     environment:
-      - REDIS_HOST=probo-redis
+      - REDIS_HOST=redis-stack
       - REDIS_PORT=6379
-      - REDIS_URL=redis://probo-redis:6379
-      - DATABASE_URL=postgresql://probo:probo123@probo-postgres:5432/probodb
+      - REDIS_URL=redis://redis-stack:6379
+      - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
+
 volumes:
   postgres_data:

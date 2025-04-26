@@ -1,5 +1,5 @@
 {
-  "name": "position-liquidator",
+  "name": "@repo/position-liquidator",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

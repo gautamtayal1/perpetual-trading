@@ -1,4 +1,4 @@
-import { eventQueue, fundingQueue, RedisManager } from "@repo/event-queue"
+import { eventQueue, RedisManager } from "@repo/event-queue"
 import { Orderbook } from "./Orderbook.js"
 import { S3Manager } from "./S3Manager.js"
 import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
