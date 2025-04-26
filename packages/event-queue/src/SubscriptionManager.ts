@@ -6,7 +6,7 @@ export class SubscriptionManager {
 
   private constructor() {
     this.redisClient = createClient({
-      url: process.env.REDIS_URL || "redis://localhost:6379"
+      url: process.env.REDIS_URL || "redis://redis-stack:6379"
     })
     this.redisClient.connect()
   }

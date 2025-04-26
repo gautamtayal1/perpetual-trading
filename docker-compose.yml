@@ -43,7 +43,7 @@ services:
     depends_on:
       - server
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      - NEXT_PUBLIC_API_URL=http://64.227.155.9:8080
       - REDIS_URL=redis://redis-stack:6379
       - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
 

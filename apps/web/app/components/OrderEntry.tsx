@@ -13,12 +13,12 @@ const OrderEntry: React.FC = () => {
   const [price, setPrice] = useState('95000');
   const [size, setSize] = useState('1');
   const [balance, setBalance] = useState(0);
-  const { isConnected, subscribe, unsubscribe } = useWebSocket("ws://localhost:8081");
+  const { isConnected, subscribe, unsubscribe } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_WSS_URL}`);
   
   const handlePlaceOrder = (orderSide: string) => {
     try {
       console.log(userId);
-      const order = axios.post('http://localhost:8080/order/create', {
+      const order = axios.post(`http://${process.env.NEXT_PUBLIC_SERVER_URL}/order/create`, {
         userId: userId,
         market: "BTCUSDT",
         entryPrice: Number(price),
@@ -35,7 +35,7 @@ const OrderEntry: React.FC = () => {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const response = await axios.get(`http://localhost:8080/balance/${userId}`);
+      const response = await axios.get(`http://${process.env.NEXT_PUBLIC_SERVER_URL}/balance/${userId}`);
       setBalance(response.data.user.balance);
     };
     fetchBalance();

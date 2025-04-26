@@ -6,7 +6,7 @@ const worker = new Worker("LIQUIDATION_QUEUE", async(job) => {
   const leverage = orderObj.entryPrice * orderObj.quantity / orderObj.margin
 
   try {
-    const order = await axios.post(`http://localhost:8080/order/create`, {
+    const order = await axios.post(`http://${process.env.NEXT_PUBLIC_SERVER_URL}/order/create`, {
       userId: orderObj.userId,
       entryPrice: orderObj.entryPrice,
       quantity: orderObj.quantity,

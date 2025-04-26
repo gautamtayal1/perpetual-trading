@@ -2,11 +2,11 @@ import { createClient } from 'redis'
 import WebSocket, { WebSocketServer } from 'ws'
 
 async function startWSS() {
-  const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
+  const REDIS_URL = process.env.REDIS_URL || 'redis://redis-stack:6379'
   const WSS_PORT  = +(process.env.WSS_PORT  || 8081)
 
   const wss = new WebSocketServer({ port: WSS_PORT })
-  console.log(`WSS listening on ws://localhost:${WSS_PORT}`)
+  console.log(`WSS listening on ws://${process.env.NEXT_PUBLIC_WSS_URL}`)
 
   wss.on('connection', async ws => {
     console.log('Client connected')
