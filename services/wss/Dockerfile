@@ -15,4 +15,6 @@ RUN pnpm install --frozen-lockfile
 
 RUN pnpm --filter wss build 
 
+EXPOSE 8081
+
 CMD ["pnpm", "--filter", "wss", "start"]

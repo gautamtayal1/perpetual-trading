@@ -12,9 +12,9 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -b",
     "dev": "tsx src/bullmq/Worker.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/bullmq/Worker.js"
   },
   "type": "module",
   "dependencies": {

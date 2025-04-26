@@ -3,6 +3,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
+    "composite": true,
+    "incremental": true,
   },
   "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../types" },
+    { "path": "../../services/engine" },
+  ]
 }

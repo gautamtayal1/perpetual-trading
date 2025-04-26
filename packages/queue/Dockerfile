@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY packages/order-queue/package.json ./package.json
+COPY packages/queue/package.json ./package.json
 COPY pnpm-lock.yaml ./
 COPY pnpm-workspace.yaml ./
 COPY turbo.json ./
@@ -13,12 +13,9 @@ COPY . .
 
 RUN pnpm install --frozen-lockfile
 
-RUN pnpm --filter infra build
 RUN pnpm --filter engine build
-RUN pnpm --filter order-queue build
+RUN pnpm --filter queue build
 
-WORKDIR /app/services/engine
-
-CMD ["pnpm", "worker"]
+CMD ["pnpm", "--filter", "queue", "start"]
 
 
