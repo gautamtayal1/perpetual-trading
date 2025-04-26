@@ -12,7 +12,7 @@ model User {
   phoneNumber String     @unique
   balance     Int        @default(10000)
   createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  updatedAt   DateTime?  @updatedAt
   orders      Order[]
   OTPs        OTP[]
   positions   Position[]

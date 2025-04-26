@@ -1,7 +1,6 @@
 services:
   redis-stack:
     image: redis/redis-stack:latest
-    container_name: binance-redis
     ports:
       - "6379:6379"
       - "8001:8001"
@@ -9,7 +8,6 @@ services:
 
   postgres:
     image: postgres:latest
-    container_name: binance-postgres
     ports:
       - "5441:5432"
     restart: unless-stopped
@@ -24,7 +22,6 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
-    container_name: server
     ports:
       - "8080:8080"
     depends_on:
@@ -36,11 +33,11 @@ services:
       - REDIS_URL=redis://redis-stack:6379
       - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
 
+
   web: 
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-    container_name: binance-web
     ports:
       - "3000:3000"
     depends_on:
@@ -54,7 +51,6 @@ services:
     build:
       context: .
       dockerfile: packages/queue/Dockerfile
-    container_name: binance-queue
     depends_on:
       - redis-stack
     environment:
@@ -65,7 +61,6 @@ services:
     build: 
       context: .
       dockerfile: services/archiver/Dockerfile
-    container_name: binance-archiver
     depends_on:
       - redis-stack
       - postgres
@@ -79,7 +74,6 @@ services:
     build:
       context: .
       dockerfile: services/wss/Dockerfile
-    container_name: binance-wss
     ports:
       - "8081:8081"
     depends_on:
@@ -91,7 +85,6 @@ services:
     build:
       context: .
       dockerfile: services/oracle/Dockerfile
-    container_name: binance-oracle
     depends_on:
       - redis-stack
     environment:
@@ -103,7 +96,6 @@ services:
     build:
       context: .
       dockerfile: services/funding-schedular/Dockerfile
-    container_name: binance-funding-schedular
     depends_on:
       - redis-stack
     environment:
@@ -115,7 +107,6 @@ services:
     build:
       context: .
       dockerfile: services/position-liquidator/Dockerfile
-    container_name: binance-position-liquidator
     depends_on:
       - redis-stack
     environment:
