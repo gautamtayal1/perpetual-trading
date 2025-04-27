@@ -13,9 +13,10 @@ COPY . .
 
 RUN pnpm install --frozen-lockfile
 
+RUN pnpm --filter @repo/types build
 RUN pnpm --filter engine build
 RUN pnpm --filter queue build
 
+WORKDIR /app/packages/queue
+
 CMD ["pnpm", "--filter", "queue", "start"]
-
-

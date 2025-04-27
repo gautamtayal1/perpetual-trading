@@ -13,12 +13,12 @@ interface OrderData {
 const OrderBook = () => {
   const [asks, setAsks] = useState<OrderData[]>([]);
   const [bids, setBids] = useState<OrderData[]>([]);
-  const { isConnected, subscribe, unsubscribe } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_WSS_URL}`);
+  const { isConnected, subscribe, unsubscribe } = useWebSocket(`ws://64.227.155.9:8081`);
 
   useEffect(() => {
     const fetchDepth = async () => {
       try {
-        const response = await axios.get(`http://${process.env.NEXT_PUBLIC_SERVER_URL}/depth`);
+        const response = await axios.get(`http://64.227.155.9:8080/depth`);
         console.log(response.data);
         setAsks(response.data.asks);
         setBids(response.data.bids);

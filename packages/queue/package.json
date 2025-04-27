@@ -14,7 +14,7 @@
   "scripts": {
     "build": "tsc -b",
     "dev": "tsx src/bullmq/Worker.ts",
-    "start": "node dist/bullmq/Worker.js"
+    "start": "node dist/bullmq/worker.js"
   },
   "type": "module",
   "dependencies": {

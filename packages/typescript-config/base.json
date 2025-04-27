@@ -16,6 +16,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2022",
+    "noImplicitAny": false, 
     "baseUrl": ".",
     "paths": {
       "@repo/types": ["packages/types/src"],

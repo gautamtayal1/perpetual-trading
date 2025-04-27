@@ -14,7 +14,7 @@ interface ChartSectionProps {
 const ChartSection: React.FC = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('15m');
   const [activeView, setActiveView] = useState('Original');
-  const { isConnected, subscribe, unsubscribe } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_WSS_URL}`);
+  const { isConnected, subscribe, unsubscribe } = useWebSocket(`ws://64.227.155.9:8081`);
   const [markPrice, setMarkPrice] = useState(0);
   const [indexPrice, setIndexPrice] = useState(0);
   const [fundingRate, setFundingRate] = useState(0);
