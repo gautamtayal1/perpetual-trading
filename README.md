@@ -6,7 +6,7 @@ A full-stack, microservices-based perpetual futures trading platform built with 
 
 ## Architecture
 
-https://drive.google.com/file/d/1kqC-oNcMLfUSUw__XNEqLVJdVUS9nPyl/view?usp=sharing
+![Architecture](https://res.cloudinary.com/dutbrfinr/image/upload/v1745736508/pgnpbhznfstdsnidmukl.png)
 
 ---
 
