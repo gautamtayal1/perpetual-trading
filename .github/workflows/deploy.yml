@@ -1,0 +1,23 @@
+name: Deploy to VPS 
+
+on:
+  push:
+    branches:
+      - main
+
+jobs: 
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect and Deploy
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            cd /root/perpetual-trading
+            git pull origin main
+            docker compose down
+            docker compose up -d --build
