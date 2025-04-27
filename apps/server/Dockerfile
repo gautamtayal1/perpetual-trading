@@ -12,4 +12,4 @@ RUN pnpm --filter @repo/db exec prisma generate
 RUN pnpm --filter @repo/queue build
 RUN pnpm --filter @repo/server... build
 
-CMD ["sh", "-c", "pnpm --filter @repo/db exec prisma migrate dev --name init && pnpm --filter @repo/server start"]
+CMD ["sh", "-c", "pnpm --filter @repo/db exec prisma migrate deploy && pnpm --filter @repo/server start"]
