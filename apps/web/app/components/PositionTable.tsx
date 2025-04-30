@@ -141,23 +141,21 @@ const PositionsTable: React.FC = () => {
       ) : (
         <>
           {/* Orders Table Header */}
-          <div className="grid grid-cols-6 text-xs text-[#8A8A8A] border-b border-[#2A2A2A] py-2 px-4 bg-[#121212]">
+          <div className="grid grid-cols-5 text-xs text-[#8A8A8A] border-b border-[#2A2A2A] py-2 px-4 bg-[#121212]">
             <div>Symbol</div>
             <div>Side</div>
             <div>Price</div>
             <div>Quantity</div>
-            <div>Status</div>
           </div>
         
           <div className="flex-1 flex flex-col overflow-y-auto">
             {orders.length > 0 ? (
               orders.map((order: any) => (
-                <div className="grid grid-cols-6 text-sm py-2 px-4 hover:bg-[#1E1E1E] border-b border-[#2A2A2A]" key={order.id}>
+                <div className="grid grid-cols-5 text-sm py-2 px-4 hover:bg-[#1E1E1E] border-b border-[#2A2A2A]" key={order.id}>
                   <div className="text-white">BTCUSDT</div>
                   <div className="text-[#0ECB81]">{order.side}</div>
                   <div className="text-white">{order.entryPrice}</div>
                   <div className="text-white">{order.quantity}</div>
-                  <div className="text-white">{order.status}</div>
                   <button className="bg-[#F6465D] text-white rounded py-1 px-1 text-xs font-medium hover:scale-105 hover:shadow-lg hover:shadow-[#F6465D]/20 transition-all duration-300 ease-in-out active:scale-95 active:shadow-none focus:outline-none focus:ring-2 focus:ring-[#F6465D]/50 w-40"
                     onClick={() => {handleCancelOrder(order.id, order.entryPrice, order.quantity, order.side)}}>
                     Cancel
