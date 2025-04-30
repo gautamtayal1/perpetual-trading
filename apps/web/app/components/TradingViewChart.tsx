@@ -5,7 +5,16 @@ import Script from 'next/script'
 
 declare global {
   interface Window {
-    LightweightCharts: any
+    LightweightCharts: {
+      createChart: (
+        container: HTMLElement,
+        options: any
+      ) => {
+        addCandlestickSeries: (options: any) => any;
+        resize: (width: number, height: number) => void;
+        remove: () => void;
+      };
+    }
   }
 }
 
@@ -19,81 +28,99 @@ export default function LightweightCandlestickChart({
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const [scriptLoaded, setScriptLoaded] = useState(false)
 
-  // simple sample data generator
-  function generateCandlestickData() {
-    const data: { time: number; open: number; high: number; low: number; close: number }[] = []
-    let t = Math.floor(Date.now() / 1000) - 60 * 60 * 24 * 30 
-    let prevClose = 50
-    for (let i = 0; i < 5000; i++) {
-      const open = prevClose + (Math.random() - 0.5) * 200
-      const high = open + Math.random() * 200
-      const low = open - Math.random() * 200
-      const close = low + Math.random() * (high - low)
-      data.push({ time: t + i * 60 * 60, open, high, low, close })
-      prevClose = close
-    }
-    return data
-  }
-
   useEffect(() => {
     if (!scriptLoaded || !chartContainerRef.current) return
     
-    // Apply background directly to container first
-    if (chartContainerRef.current) {
-      chartContainerRef.current.style.backgroundColor = '#000000';
-    }
+    try {
+      const container = chartContainerRef.current
+      if (!window.LightweightCharts) {
+        console.error('LightweightCharts is not loaded')
+        return
+      }
 
-    const container = chartContainerRef.current
-    const chart = window.LightweightCharts.createChart(container, {
-      width: container.clientWidth,
-      height: container.clientHeight,
-      layout: {
-        background: { 
-          type: 'solid', 
-          color: '#000000' 
+      // Apply background directly to container first
+      if (chartContainerRef.current) {
+        chartContainerRef.current.style.backgroundColor = '#000000';
+      }
+
+      const chart = window.LightweightCharts.createChart(container, {
+        width: container.clientWidth,
+        height: container.clientHeight,
+        layout: {
+          background: { 
+            type: 'solid', 
+            color: '#000000' 
+          },
+          backgroundColor: '#000000',
+          textColor: '#8A8A8A',
         },
-        backgroundColor: '#000000',
-        textColor: '#8A8A8A',
-      },
-      grid: {
-        vertLines: { color: '#333333', style: 1 },
-        horzLines: { color: '#333333', style: 1 },
-      },
-      timeScale: {
-        timeVisible: true,
-        secondsVisible: false,
-      },
-      rightPriceScale: {
-        borderColor: '#000000',
-        backgroundColor: '#000000',
-      },
-    })
+        grid: {
+          vertLines: { color: '#333333', style: 1 },
+          horzLines: { color: '#333333', style: 1 },
+        },
+        timeScale: {
+          timeVisible: true,
+          secondsVisible: false,
+        },
+        rightPriceScale: {
+          borderColor: '#000000',
+          backgroundColor: '#000000',
+        },
+      })
 
-    // Apply additional styling to ensure black background
-    const chartElement = container.querySelector('.tv-lightweight-charts') as HTMLElement;
-    if (chartElement) {
-      chartElement.style.backgroundColor = '#000000';
-    }
+      if (typeof chart.addCandlestickSeries !== 'function') {
+        console.error('addCandlestickSeries is not available')
+        return
+      }
 
-    const candleSeries = chart.addSeries(window.LightweightCharts.CandlestickSeries)
-    candleSeries.setData(generateCandlestickData())
+      const chartElement = container.querySelector('.tv-lightweight-charts') as HTMLElement;
+      if (chartElement) {
+        chartElement.style.backgroundColor = '#000000';
+      }
 
-    const handleResize = () => {
-      chart.resize(container.clientWidth, container.clientHeight)
-    }
-    window.addEventListener('resize', handleResize)
+      const candleSeries = chart.addCandlestickSeries({
+        upColor: '#26a69a',
+        downColor: '#ef5350',
+        borderVisible: false,
+        wickUpColor: '#26a69a',
+        wickDownColor: '#ef5350'
+      })
 
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      chart.remove()
+      ;(async () => {
+        const realData = await fetch(
+          'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=500'
+        ).then(r => r.json())
+        // transform the array of arrays into { time, open, high, low, close }
+        const chartData = realData.map(c => ({
+          time: c[0] / 1000,
+          open: +c[1],
+          high: +c[2],
+          low: +c[3],
+          close: +c[4],
+        }))
+        candleSeries.setData(chartData)
+      })()
+
+      const handleResize = () => {
+        chart.resize(container.clientWidth, container.clientHeight)
+      }
+      window.addEventListener('resize', handleResize)
+
+      return () => {
+        window.removeEventListener('resize', handleResize)
+        chart.remove()
+      }
+    } catch (error) {
+      console.error('Error initializing chart:', error)
     }
   }, [scriptLoaded])
 
   return (
     <div className="chart-wrapper" style={{ width, height, backgroundColor: '#000000', padding: 0, margin: 0 }}>
       <Script
-        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"
+        src="https://unpkg.com/lightweight-charts@4.0.1/dist/lightweight-charts.standalone.production.js"
         onLoad={() => setScriptLoaded(true)}
+        onError={(e) => console.error('Script failed to load:', e)}
       />
       <div
         ref={chartContainerRef}

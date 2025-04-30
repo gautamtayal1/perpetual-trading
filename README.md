@@ -16,7 +16,7 @@ A full-stack, microservices-based perpetual futures trading platform built with 
 - **Package Manager**: pnpm  
 - **Services & Frameworks**  
   - **API Server** (`apps/server`): Express, Prisma ORM  
-  - **WebSocket Server** (`services/wss`): ws + Redis Pub/Sub  
+  - **WebSocket Server** (`services/wss`): WebSockets + Redis Pub/Sub  
   - **Engine** (`services/engine`): In-memory orderbook, matching logic  
   - **Worker & Queues** (`packages/order-queue`): BullMQ, Redis  
   - **Archiver** (`services/archiver`): Persists trades/positions to PostgreSQL  
@@ -27,21 +27,4 @@ A full-stack, microservices-based perpetual futures trading platform built with 
 - **Containerization**: Docker, Docker Compose  
 
 ---
-
----
-
-## 🚀 Getting Started
-
-### 1. Prerequisites  
-- Node.js 20 LTS  
-- pnpm  
-- Docker & Docker Compose  
-- PostgreSQL & Redis (or via Docker)
-
-### 2. Clone & Install
-
-```bash
-git clone <repo-url>
-cd <repo-root>
-pnpm install --frozen-lockfile
 

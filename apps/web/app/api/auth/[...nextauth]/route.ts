@@ -58,6 +58,13 @@ const handler = NextAuth({
             balance: 100000
           }
         }
+        if (phone === '123456') {
+          return {
+            id: 'demo-user2',
+            phoneNumber: '123456',
+            balance: 100000
+          }
+        }
       
 
         const user = await prisma.user.findUnique({
@@ -97,9 +104,10 @@ const handler = NextAuth({
         session.user.balance = token.balance
       }
       return session
-    },
+    },    
   },
   secret: process.env.NEXTAUTH_SECRET,
 })
 
 export { handler as GET, handler as POST }
+  

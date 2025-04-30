@@ -51,17 +51,19 @@ const OrderEntry: React.FC = () => {
   }, [isConnected, subscribe, unsubscribe, userId]);
 
   return (
-    <div className="h-full overflow-y-auto p-2">
+    <div className="h-full overflow-y-auto p-2 py-3">
       {/* Order Type Tabs */}
-      <h3 className='font-medium mb-3'>
+      <h3 className='font-medium mb-3 mt-2'>
         Place Order
       </h3>
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center bg-[#1E1E1E] rounded-full px-3 h-8 shadow-lg hover:shadow-[#1E1E1E]/50 transition-all duration-300">
-            <span className="text-xs px-2 text-[#8A8A8A] font-medium">Balance:</span>
-            <span className="text-xs px-2 text-[#0ECB81] font-bold animate-pulse">{balance}</span>
-            <div className="ml-2 w-2 h-2 rounded-full bg-[#0ECB81] animate-ping"></div>
+      <div className="flex justify-between items-center mb-2 gap-3 w-full">
+        <div className="flex items-center space-x-4 w-full">
+          <div className="flex items-center justify-center bg-gradient-to-r from-[#1E1E1E] to-[#2A2A2A] rounded-xl px-3 h-9 shadow-lg hover:shadow-[#0ECB81]/20 transition-all duration-300 border border-[#0ECB81]/20 backdrop-blur-sm w-full">
+            <div className="flex items-center space-x-2 w-full justify-center">
+              <span className="text-xs px-1 text-[#8A8A8A] font-medium tracking-wide">Balance:</span>
+              <span className="text-sm px-1 text-[#0ECB81] font-bold animate-pulse tracking-wider">{Number(balance).toFixed(2)}</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#0ECB81] animate-ping shadow-[#0ECB81]/50"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -87,7 +89,7 @@ const OrderEntry: React.FC = () => {
         {/* Price Input */}
         <div>
         {orderType === "LIMIT-CREATE" && <div className="relative">
-          <div className="flex justify-between text-xs mb-1">
+          <div className="flex justify-between text-xs my-2">
             <span className="text-[#8A8A8A]">Price</span>
           
           </div>
@@ -103,7 +105,7 @@ const OrderEntry: React.FC = () => {
         </div>
         
         {/* Size Input */}
-        <div className="py-1">
+        <div className="py-2">
           <div className="flex justify-between text-xs mb-2">
             <span className="text-[#8A8A8A]">Size</span>
           </div>
