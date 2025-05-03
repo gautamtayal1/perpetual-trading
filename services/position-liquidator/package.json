@@ -18,6 +18,7 @@
     "@repo/typescript-config": "workspace:*",
     "axios": "^1.8.4",
     "bullmq": "^5.49.1",
+    "dotenv": "^16.5.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }

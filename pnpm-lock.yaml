@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@prisma/client':
-        specifier: ^6.6.0
-        version: 6.6.0(prisma@6.6.0(typescript@5.8.2))(typescript@5.8.2)
     devDependencies:
       '@types/node':
         specifier: ^22.14.0
@@ -132,6 +128,9 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      env-cmd:
+        specifier: ^10.1.0
+        version: 10.1.0
       prisma:
         specifier: ^6.6.0
         version: 6.6.0(typescript@5.8.3)
@@ -186,6 +185,9 @@ importers:
       bullmq:
         specifier: ^5.49.1
         version: 5.49.1
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
       redis:
         specifier: ^4.7.0
         version: 4.7.0
@@ -306,6 +308,9 @@ importers:
       bullmq:
         specifier: ^5.49.1
         version: 5.49.1
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
@@ -386,6 +391,9 @@ importers:
       bullmq:
         specifier: ^5.49.1
         version: 5.49.1
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
@@ -1774,6 +1782,10 @@ packages:
     resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
     engines: {node: '>=14'}
 
+  commander@4.1.1:
+    resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
+    engines: {node: '>= 6'}
+
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
@@ -1924,6 +1936,11 @@ packages:
   enhanced-resolve@5.18.1:
     resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
     engines: {node: '>=10.13.0'}
+
+  env-cmd@10.1.0:
+    resolution: {integrity: sha512-mMdWTT9XKN7yNth/6N6g2GuKuJTsKMDHlQFUDacb/heQRRWOTIZ42t1rMHnQu4jYxU1ajdTeJM+9eEETlqToMA==}
+    engines: {node: '>=8.0.0'}
+    hasBin: true
 
   es-abstract@1.23.9:
     resolution: {integrity: sha512-py07lI0wjxAC/DcfK1S6G7iANonniZwTISvdPzk9hzeH0IZIshbuuFxLIU96OyF89Yb9hiqWn8M/bY83KY5vzA==}
@@ -4391,11 +4408,6 @@ snapshots:
 
   '@panva/hkdf@1.2.1': {}
 
-  '@prisma/client@6.6.0(prisma@6.6.0(typescript@5.8.2))(typescript@5.8.2)':
-    optionalDependencies:
-      prisma: 6.6.0(typescript@5.8.2)
-      typescript: 5.8.2
-
   '@prisma/client@6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)':
     optionalDependencies:
       prisma: 6.6.0(typescript@5.8.3)
@@ -5375,6 +5387,8 @@ snapshots:
 
   commander@10.0.1: {}
 
+  commander@4.1.1: {}
+
   concat-map@0.0.1: {}
 
   constant-case@2.0.0:
@@ -5516,6 +5530,11 @@ snapshots:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.2.1
+
+  env-cmd@10.1.0:
+    dependencies:
+      commander: 4.1.1
+      cross-spawn: 7.0.6
 
   es-abstract@1.23.9:
     dependencies:
@@ -6811,17 +6830,6 @@ snapshots:
   prettier@3.5.3: {}
 
   pretty-format@3.8.0: {}
-
-  prisma@6.6.0(typescript@5.8.2):
-    dependencies:
-      '@prisma/config': 6.6.0
-      '@prisma/engines': 6.6.0
-    optionalDependencies:
-      fsevents: 2.3.3
-      typescript: 5.8.2
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
 
   prisma@6.6.0(typescript@5.8.3):
     dependencies:

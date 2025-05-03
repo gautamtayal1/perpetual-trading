@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import prisma from '@repo/db'
+import prisma from '@repo/db/client'
 
 declare module "next-auth" {
   interface User {

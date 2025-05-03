@@ -21,6 +21,7 @@
     "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "bullmq": "^5.49.1",
+    "dotenv": "^16.5.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
     "uuid": "^11.1.0"

@@ -20,6 +20,7 @@
     "@repo/typescript-config": "workspace:*",
     "bull": "^4.16.5",
     "bullmq": "^5.49.1",
+    "dotenv": "^16.5.0",
     "redis": "^4.7.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"

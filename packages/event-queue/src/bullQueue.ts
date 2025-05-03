@@ -1,4 +1,7 @@
 import { Queue } from "bullmq"
+import dotenv from "dotenv"
+
+dotenv.config()
 
 if (!process.env.REDIS_HOST || !process.env.REDIS_PORT) {
   throw new Error("Missing REDIS_HOST or REDIS_PORT in env");

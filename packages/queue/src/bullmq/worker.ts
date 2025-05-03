@@ -1,7 +1,9 @@
 import "dotenv/config";
 import { Worker } from "bullmq";
 import { Engine } from "@repo/engine"
+import dotenv from "dotenv"
 
+dotenv.config()
 
 ;(async() => {
   if (!process.env.REDIS_HOST || !process.env.REDIS_PORT) {

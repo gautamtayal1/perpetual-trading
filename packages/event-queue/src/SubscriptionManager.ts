@@ -1,4 +1,7 @@
 import { createClient, RedisClientType } from "redis";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 export class SubscriptionManager {
   private static instance: SubscriptionManager
@@ -6,7 +9,7 @@ export class SubscriptionManager {
 
   private constructor() {
     this.redisClient = createClient({
-      url: process.env.REDIS_URL || "redis://redis-stack:6379"
+      url: process.env.REDIS_URL
     })
     this.redisClient.connect()
   }

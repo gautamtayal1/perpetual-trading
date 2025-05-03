@@ -6,6 +6,7 @@ services:
       - "6379:6379"
       - "8001:8001"
     restart: unless-stopped
+    
 
   postgres:
     image: postgres:latest
@@ -18,6 +19,8 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
 
   server:
     build:

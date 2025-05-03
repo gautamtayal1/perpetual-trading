@@ -4,8 +4,11 @@ import { S3Manager } from "./S3Manager.js"
 import { Fill, Order, OrderSide, UserBalance, UserPosition } from "@repo/types"
 import { v4 as uuidv4 } from "uuid" 
 import { Worker } from "bullmq"
+import dotenv from "dotenv"
 
-const ENGINE_KEY = "prod-snapshot.json"
+dotenv.config()
+
+const ENGINE_KEY = process.env.ENGINE_KEY || "test6-snapshot.json"
 
 export class Engine {
   public static instance: Engine | null = null
@@ -30,7 +33,7 @@ export class Engine {
 
     const engine = new Engine()
     try {
-      const snapshot = await S3Manager.downloadSnapshot(ENGINE_KEY)
+      const snapshot = await S3Manager.downloadSnapshot(ENGINE_KEY!)
       if (snapshot) {
         const snapBook = snapshot.orderbook
         engine.orderbook = new Orderbook(snapBook.bids, snapBook.asks, snapBook.market)
@@ -81,7 +84,7 @@ export class Engine {
       userPosition: Array.from(this.userPosition.entries()),
       userBalance: Array.from(this.userBalance.entries())
     }
-    await S3Manager.uploadSnapshot(snapshot, ENGINE_KEY)
+    await S3Manager.uploadSnapshot(snapshot, ENGINE_KEY!)
   }
 
   processOrder(order: Order) {

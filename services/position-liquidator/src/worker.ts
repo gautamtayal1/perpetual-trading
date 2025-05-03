@@ -1,5 +1,8 @@
+import dotenv from "dotenv"
 import axios from "axios";
 import { Worker } from "bullmq";
+
+dotenv.config()
 
 if (!process.env.REDIS_HOST || !process.env.REDIS_PORT || !process.env.NEXT_PUBLIC_API_URL) {
   throw new Error("Missing REDIS_HOST or NEXT_PUBLIC_API_URL in env");

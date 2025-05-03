@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function startWSS() {
-  if (!process.env.REDIS_URL || !process.env.WSS_PORT) {
-    throw new Error("Missing REDIS_URL or WSS_PORT in env");
+  if (!process.env.REDIS_URL || !process.env.WSS_PORT || !process.env.NEXT_PUBLIC_WSS_URL) {
+    throw new Error("Missing REDIS_URL or WSS_PORT or NEXT_PUBLIC_WSS_URL in env");
   }
 
   const REDIS_URL = process.env.REDIS_URL
