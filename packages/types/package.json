@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./dist/index.js"
   },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js"
