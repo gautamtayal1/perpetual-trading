@@ -69,6 +69,16 @@ dotenv.config();
           userId: data.userId
         }]
       })
+      await prisma.order.update({
+        where: {
+          id: data.otherOrderId
+        },
+        data: {
+          executedQty: {
+            increment: data.quantity
+          }
+        }
+      })
     }
     if (type === "POSITION_UPDATE") {
       await prisma.position.upsert({

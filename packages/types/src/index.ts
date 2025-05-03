@@ -49,4 +49,5 @@ export interface Fill {
   price: number;
   quantity: number;
   side?: OrderSide;
+  otherOrderId?: string;
 }

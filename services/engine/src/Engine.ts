@@ -8,7 +8,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const ENGINE_KEY = process.env.ENGINE_KEY || "test6-snapshot.json"
+const ENGINE_KEY = process.env.ENGINE_KEY || "test7-snapshot.json"
 
 export class Engine {
   public static instance: Engine | null = null
@@ -120,7 +120,7 @@ export class Engine {
         }
         console.log("cancelling order", order)
        
-        this.publishDepthForCancel(order.entryPrice.toString())
+        // this.publishDepthForCancel(order.entryPrice.toString())
         this.publishUserBalance(order.userId)
         this.publishOrderCancelled(order.id!)
         this.updateRedisBalance(order.userId)
@@ -189,7 +189,7 @@ export class Engine {
     this.publishDepth()
     this.updateRedisBalance(order.userId)
     this.updateRedisDepth()
-    this.updateRedisOrder(order)
+    this.updateRedisOrder({...order, filled: executedQty})
     this.updateRedisFills(fills, order)
     this.updateRedisPosition(fills, order)
     console.log(executedQty, fills)
@@ -661,15 +661,9 @@ export class Engine {
   }
 
   applyFunding (fundingRate: number, markPrice: number) {
-    console.log("applying funding from engine")
-    console.log(fundingRate, markPrice, "from engine")
     for (const position of this.userPosition.values()) {
-      console.log("entering for loop")
-      console.log("position: ", position)
       const side = position.side
       const quantity = position.quantity
-      console.log("side: ", side)
-      console.log("quantity: ", quantity)
       const fundingPayment = markPrice * quantity * fundingRate
       if (side === "UNINITIALIZED") continue
       if (side === "LONG") {
@@ -682,18 +676,18 @@ export class Engine {
     }
   }
 
-  publishDepthForCancel(price: string) {
-    const { bids, asks } = this.orderbook!.getMarketDepth()
-    const updatedBids = bids.filter((b) => b[0] === price)
-    const updatedAsks = asks.filter((a) => a[0] === price)
+  // publishDepthForCancel(price: string) {
+  //   const { bids, asks } = this.orderbook!.getMarketDepth()
+  //   const updatedBids = bids.filter((b) => b[0] === price)
+  //   const updatedAsks = asks.filter((a) => a[0] === price)
 
-    RedisManager.getInstance().publishToChannel("depth:update", {
-      data: {
-        a: updatedAsks.length ? updatedAsks : [[price, "0"]],
-        b: updatedBids.length ? updatedBids : [[price, "0"]],
-      }
-    })
-  }
+  //   RedisManager.getInstance().publishToChannel("depth:update", {
+  //     data: {
+  //       a: updatedAsks.length ? updatedAsks : [[price, "0"]],
+  //       b: updatedBids.length ? updatedBids : [[price, "0"]],
+  //     }
+  //   })
+  // }
 
   cancelRedisOrder (order: Order) {
     eventQueue.add("cancel_order", {  

@@ -77,7 +77,7 @@ const PositionsTable: React.FC = () => {
   }
   
   return (
-    <div className="w-full border-t border-[#2A2A2A] flex flex-col overflow-hidden bg-black pb-10">
+    <div className="w-full border-t border-[#2A2A2A] flex flex-col overflow-hidden bg-black pb-20">
       {/* Tab Header */}
       <div className="flex items-center border-b border-[#2A2A2A] bg-[#121212]">
         <div className="flex overflow-x-auto">
@@ -151,7 +151,11 @@ const PositionsTable: React.FC = () => {
         
           <div className="flex-1 flex flex-col overflow-y-auto">
             {orders.length > 0 ? (
-              orders.map((order: any) => (
+              orders.map((order: any) => {
+                if (order.executedQty === order.quantity) {
+                  return null
+                }
+                return (
                 <div className="grid grid-cols-5 text-sm py-2 px-4 hover:bg-[#1E1E1E] border-b border-[#2A2A2A]" key={order.id}>
                   <div className="text-white">BTCUSDT</div>
                   <div className="text-[#0ECB81]">{order.side}</div>
@@ -161,8 +165,9 @@ const PositionsTable: React.FC = () => {
                     onClick={() => {handleCancelOrder(order.id, order.entryPrice, order.quantity, order.side, order.executedQty)}}>
                     Cancel
                   </button>
-                </div>
-              ))
+                  </div>
+                )
+              })
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center py-12 text-sm text-[#8A8A8A]">
                 <div className="mb-4 bg-[#1E1E1E] p-6 rounded-full">

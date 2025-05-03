@@ -77,6 +77,7 @@ export class Orderbook {
           orderId: order.id!,
           userId: order.userId,
           otherUserId: bid[i]?.userId!,
+          otherOrderId: bid[i]?.id!,
           price: order.entryPrice,
           quantity: traded
         })
@@ -111,6 +112,7 @@ export class Orderbook {
           orderId: order.id!,
           userId: order.userId,
           otherUserId: ask[i]?.userId!,
+          otherOrderId: ask[i]?.id!,
           price: order.entryPrice,
           quantity: traded
         })
