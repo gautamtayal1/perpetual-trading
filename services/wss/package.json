@@ -14,13 +14,14 @@
   "type": "module",
   "dependencies": {
     "@repo/typescript-config": "workspace:*",
+    "dotenv": "^16.5.0",
     "redis": "^4.7.0",
     "tsx": "^4.19.3",
     "ws": "^8.18.1"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@repo/event-queue": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/ws": "^8.18.1"
   }
 }

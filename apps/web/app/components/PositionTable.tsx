@@ -21,12 +21,12 @@ const PositionsTable: React.FC = () => {
   const userId = session?.user?.id;
   const [position, setPosition] = React.useState<Position | null>(null);
   const [orders, setOrders] = React.useState([]);
-  const { isConnected, subscribe, unsubscribe } = useWebSocket(`ws://64.227.155.9:8081`);
+  const { isConnected, subscribe, unsubscribe } = useWebSocket(`${process.env.NEXT_PUBLIC_WSS_URL}`);
   const [markPrice, setMarkPrice] = useState(0);
   
   useEffect(() => {
     const fetchPosition = async () => {
-      const response = await axios.get(`http://64.227.155.9:8080/position/${userId}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/position/${userId}`);
       setPosition(response.data);
     };
     fetchPosition();
@@ -34,7 +34,7 @@ const PositionsTable: React.FC = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await axios.get(`http://64.227.155.9:8080/order/${userId}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/order/${userId}`);
       setOrders(response.data);
     };
     fetchOrders();
@@ -49,7 +49,7 @@ const PositionsTable: React.FC = () => {
   }, [isConnected, subscribe, unsubscribe]);
   
   const handleCancelOrder = async (id: string, entryPrice: number, quantity: number, side: string) => {
-    await axios.post(`http://64.227.155.9:8080/order/create`, {
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/create`, {
       id: id,
       userId: userId,
       market: "BTCUSDT",
@@ -63,7 +63,7 @@ const PositionsTable: React.FC = () => {
   }
 
   const handleClosePosition = async (id: string, entryPrice: number, quantity: number, side: string) => {
-    await axios.post(`http://64.227.155.9:8080/order/create`, {
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/create`, {
       userId: userId,
       market: "BTCUSDT",
       entryPrice: entryPrice,

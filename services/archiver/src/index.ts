@@ -1,7 +1,14 @@
 import { Worker } from "bullmq"
 import prisma from "@repo/db/client";
+import dotenv from "dotenv";
+
+dotenv.config();  
 
 ;(async () => {
+  if (!process.env.REDIS_HOST || !process.env.REDIS_PORT) {
+    throw new Error("Missing REDIS_HOST or REDIS_PORT in env");
+  }
+
   const worker = new Worker("EVENT_QUEUE", async(job) => {
     const { type, data } = job.data
 
@@ -92,8 +99,8 @@ import prisma from "@repo/db/client";
     }
   }, {
     connection: {
-        host: process.env.REDIS_HOST || "localhost",
-        port: parseInt(process.env.REDIS_PORT!) || 6379,
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT!),
       }
     }
   )

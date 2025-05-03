@@ -1,12 +1,19 @@
 import { createClient } from 'redis'
 import WebSocket, { WebSocketServer } from 'ws'
+import dotenv from "dotenv";
+
+dotenv.config();
 
 async function startWSS() {
-  const REDIS_URL = process.env.REDIS_URL || 'redis://redis-stack:6379'
-  const WSS_PORT  = +(process.env.WSS_PORT  || 8081)
+  if (!process.env.REDIS_URL || !process.env.WSS_PORT) {
+    throw new Error("Missing REDIS_URL or WSS_PORT in env");
+  }
+
+  const REDIS_URL = process.env.REDIS_URL
+  const WSS_PORT  = +(process.env.WSS_PORT)
 
   const wss = new WebSocketServer({ port: WSS_PORT })
-  console.log(`WSS listening on ws://${process.env.NEXT_PUBLIC_WSS_URL}`)
+  console.log(`WSS listening on ${process.env.NEXT_PUBLIC_WSS_URL}`)
 
   wss.on('connection', async ws => {
     console.log('Client connected')

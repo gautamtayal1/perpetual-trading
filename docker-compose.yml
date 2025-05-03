@@ -1,6 +1,7 @@
 services:
   redis-stack:
     image: redis/redis-stack:latest
+    command: ["redis-server", "--replicaof", "no", "one", "--protected-mode", "no"]
     ports:
       - "6379:6379"
       - "8001:8001"

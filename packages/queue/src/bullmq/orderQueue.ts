@@ -1,10 +1,14 @@
 import { Queue } from "bullmq";
 import { Order } from "@repo/types"
 
+if (!process.env.REDIS_HOST || !process.env.REDIS_PORT) {
+  throw new Error("Missing REDIS_HOST or REDIS_PORT in env");
+}
+
 export const orderQueue = new Queue("ORDER_QUEUE", {
   connection: {
-  host: process.env.REDIS_HOST || "localhost",
-  port: Number(process.env.REDIS_PORT) || 6379
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT)
   }
 })
 

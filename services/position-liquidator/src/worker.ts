@@ -1,12 +1,16 @@
 import axios from "axios";
 import { Worker } from "bullmq";
 
+if (!process.env.REDIS_HOST || !process.env.REDIS_PORT || !process.env.NEXT_PUBLIC_API_URL) {
+  throw new Error("Missing REDIS_HOST or NEXT_PUBLIC_API_URL in env");
+}
+
 const worker = new Worker("LIQUIDATION_QUEUE", async(job) => {
   const orderObj = job.data
   const leverage = orderObj.entryPrice * orderObj.quantity / orderObj.margin
 
   try {
-    const order = await axios.post(`http://${process.env.NEXT_PUBLIC_SERVER_URL}/order/create`, {
+    const order = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/create`, {
       userId: orderObj.userId,
       entryPrice: orderObj.entryPrice,
       quantity: orderObj.quantity,
@@ -22,8 +26,8 @@ const worker = new Worker("LIQUIDATION_QUEUE", async(job) => {
   }
 }, {
   connection: {
-    host: process.env.REDIS_HOST || "localhost",
-    port: Number(process.env.REDIS_PORT) || 6379
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT)
   }
 })
 

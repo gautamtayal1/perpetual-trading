@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import prisma from '@repo/db/client'
+import prisma from '@repo/db'
 
 declare module "next-auth" {
   interface User {
@@ -66,7 +66,6 @@ const handler = NextAuth({
           }
         }
       
-
         const user = await prisma.user.findUnique({
           where: { phoneNumber: phone },
         })

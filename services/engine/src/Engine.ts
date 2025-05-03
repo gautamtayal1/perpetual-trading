@@ -60,14 +60,17 @@ export class Engine {
   }
 
    startWorker() {
+    if (!process.env.REDIS_HOST || !process.env.REDIS_PORT) {
+      throw new Error("Missing REDIS_HOST or REDIS_PORT in env");
+    }
     new Worker("FUNDING_QUEUE", async (job) => {
       if (job.data.fundingRate && job.data.markPrice){
         this.applyFunding(job.data.fundingRate, job.data.markPrice)
       }
     }, {
       connection: {
-        host: process.env.REDIS_HOST || "localhost",
-        port: Number(process.env.REDIS_PORT) || 6379
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT)
       }
     })
   }

@@ -2,7 +2,12 @@ import "dotenv/config";
 import { Worker } from "bullmq";
 import { Engine } from "@repo/engine"
 
+
 ;(async() => {
+  if (!process.env.REDIS_HOST || !process.env.REDIS_PORT) {
+    throw new Error("Missing REDIS_HOST or REDIS_PORT in env");
+  }
+  
   const engine = await Engine.create()
     console.log("engine: ", engine)
   const worker = new Worker("ORDER_QUEUE", async(job) => {
@@ -10,8 +15,8 @@ import { Engine } from "@repo/engine"
     engine.processOrder(order)
   }, {
     connection: {
-      host: process.env.REDIS_HOST || "localhost",
-      port: Number(process.env.REDIS_PORT) || 6379
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT)
     }
   })
 

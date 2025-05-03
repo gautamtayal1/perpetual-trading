@@ -4,6 +4,7 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "moduleResolution": "NodeNext",
-        "module": "NodeNext"
+        "module": "NodeNext",
     }
+    
 }
