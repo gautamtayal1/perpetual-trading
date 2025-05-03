@@ -9,6 +9,9 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm install --frozen-lockfile
 
 RUN pnpm --filter @repo/db exec prisma generate
+RUN pnpm --filter @repo/types build
+RUN pnpm --filter @repo/event-queue build
+RUN pnpm --filter @repo/engine build
 RUN pnpm --filter @repo/queue build
 RUN pnpm --filter @repo/server... build
 

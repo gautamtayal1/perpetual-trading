@@ -16,8 +16,11 @@ COPY . .
 
 RUN pnpm install --frozen-lockfile
 
-RUN pnpm --filter db build
-RUN pnpm --filter db exec prisma generate
+RUN pnpm --filter @repo/db exec prisma generate
+RUN pnpm --filter @repo/types build
+RUN pnpm --filter @repo/event-queue build
+RUN pnpm --filter @repo/queue build
+RUN pnpm --filter @repo/db build
 RUN pnpm --filter web build
 
 EXPOSE 3000
