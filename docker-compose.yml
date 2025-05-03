@@ -6,8 +6,9 @@ services:
       - "6379:6379"
       - "8001:8001"
     restart: unless-stopped
+    env_file:
+      - .env
     
-
   postgres:
     image: postgres:latest
     ports:
@@ -36,7 +37,8 @@ services:
       - REDIS_PORT=6379
       - REDIS_URL=redis://redis-stack:6379
       - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
-       
+    env_file:
+      - .env
 
   web: 
     build:

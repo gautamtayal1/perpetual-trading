@@ -8,7 +8,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const ENGINE_KEY = process.env.ENGINE_KEY || "test7-snapshot.json"
+const ENGINE_KEY = process.env.ENGINE_KEY || "production-snapshot.json"
 
 export class Engine {
   public static instance: Engine | null = null
