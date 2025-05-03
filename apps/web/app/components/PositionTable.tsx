@@ -48,9 +48,10 @@ const PositionsTable: React.FC = () => {
     }
   }, [isConnected, subscribe, unsubscribe]);
   
-  const handleCancelOrder = async (id: string, entryPrice: number, quantity: number, side: string) => {
+  const handleCancelOrder = async (id: string, entryPrice: number, quantity: number, side: string, executedQty: number) => {
     await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/create`, {
       id: id,
+      filled: executedQty,
       userId: userId,
       market: "BTCUSDT",
       entryPrice: entryPrice,
@@ -109,7 +110,7 @@ const PositionsTable: React.FC = () => {
           </div>
         
           <div className="flex-1 flex flex-col overflow-y-auto">
-            {position ? (
+            {position && position.side !== "UNINITIALIZED" ? (
               <div className="grid grid-cols-9 text-sm py-2 px-4 hover:bg-[#1E1E1E] border-b border-[#2A2A2A]">
                 <div className="text-white">BTCUSDT</div>
                 <div className="text-[#0ECB81]">{position.quantity}</div>
@@ -157,7 +158,7 @@ const PositionsTable: React.FC = () => {
                   <div className="text-white">{order.entryPrice}</div>
                   <div className="text-white">{order.quantity}</div>
                   <button className="bg-[#F6465D] text-white rounded py-1 px-1 text-xs font-medium hover:scale-105 hover:shadow-lg hover:shadow-[#F6465D]/20 transition-all duration-300 ease-in-out active:scale-95 active:shadow-none focus:outline-none focus:ring-2 focus:ring-[#F6465D]/50 w-40"
-                    onClick={() => {handleCancelOrder(order.id, order.entryPrice, order.quantity, order.side)}}>
+                    onClick={() => {handleCancelOrder(order.id, order.entryPrice, order.quantity, order.side, order.executedQty)}}>
                     Cancel
                   </button>
                 </div>

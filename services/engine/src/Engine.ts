@@ -111,17 +111,22 @@ export class Engine {
         const remainingQuantity = order.quantity - order.filled
         const userBalance = this.userBalance.get(order.userId)
 
-        if (userBalance) {
-          userBalance.availableBalance += remainingQuantity * order.entryPrice
-          userBalance.lockedBalance -= remainingQuantity * order.entryPrice
+        console.log("remaining quantity", remainingQuantity)
+        console.log("user balance", userBalance)
 
-          this.publishDepthForCancel(order.entryPrice.toString())
-          this.publishUserBalance(order.userId)
-          this.publishOrderCancelled(order.id!)
-          this.updateRedisBalance(order.userId)
-          this.updateRedisDepth()
-          this.cancelRedisOrder(order)
+        if (userBalance) {
+          userBalance.availableBalance += remainingQuantity * order.entryPrice / order.leverage
+          userBalance.lockedBalance -= remainingQuantity * order.entryPrice / order.leverage
         }
+        console.log("cancelling order", order)
+       
+        this.publishDepthForCancel(order.entryPrice.toString())
+        this.publishUserBalance(order.userId)
+        this.publishOrderCancelled(order.id!)
+        this.updateRedisBalance(order.userId)
+        this.updateRedisDepth()
+        this.cancelRedisOrder(order)
+        
         break
       case "MARKET-CREATE":
         try {

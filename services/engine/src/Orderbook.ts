@@ -55,10 +55,13 @@ export class Orderbook {
   matchAsk (order: Order) {
     let executedQty = 0
     let fills: Fill[] = []
-
+    
     for(let i = 0; i < this.bids.length; i++) {
       const bid = this.bids
       if (order.entryPrice <= bid[i]?.entryPrice! && executedQty < order.quantity) {
+        if(order.userId === bid[i]?.userId) {
+          continue
+        }
         const traded = Math.min(bid[i]?.quantity!, order.quantity - executedQty)
         executedQty += traded
         
@@ -90,6 +93,9 @@ export class Orderbook {
     for(let i = 0; i < this.asks.length; i++) {
       const ask = this.asks
       if (order.entryPrice >= ask[i]?.entryPrice! && executedQty < order.quantity) {
+        if(order.userId === ask[i]?.userId) {
+          continue
+        }
         const traded = Math.min(ask[i]?.quantity!, order.quantity - executedQty)
         executedQty += traded
         

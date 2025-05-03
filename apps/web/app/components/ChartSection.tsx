@@ -7,10 +7,6 @@ const timeframes = ['15m', '1H', '4H', '1D', '1W'];
 const viewTypes = ['Original', 'Trading View', 'Depth'];
 import { useNextCutoffCountdown } from '../hooks/useNextCutOffCountdown';
 
-interface ChartSectionProps {
-  funding: number;
-  mark: number;
-}
 const ChartSection: React.FC = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('15m');
   const [activeView, setActiveView] = useState('Original');
@@ -22,9 +18,10 @@ const ChartSection: React.FC = () => {
   const pad = (n: number) => n.toString().padStart(2, '0')
 
   useEffect(() => {
-    console.log("isConnected", isConnected);
+    console.log("isConnected1", isConnected);
     if (isConnected) {
       subscribe("prices:update", (data) => {
+        console.log("data", data);
         const parsedData = JSON.parse(data);
         const markPrice = parsedData.m.toFixed(1);
         const indexPrice = parsedData.i.toFixed(1);

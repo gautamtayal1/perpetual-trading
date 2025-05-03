@@ -65,6 +65,13 @@ const handler = NextAuth({
             balance: 100000
           }
         }
+        if (phone === '0000') {
+          return {
+            id: 'demo-user3',
+            phoneNumber: '0000',
+            balance: 100000
+          }
+        }
       
         const user = await prisma.user.findUnique({
           where: { phoneNumber: phone },
