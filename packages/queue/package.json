@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "dev": "tsx src/bullmq/Worker.ts",
+    "dev": "tsx src/bullmq/worker.ts",
     "start": "node dist/bullmq/worker.js"
   },
   "type": "module",

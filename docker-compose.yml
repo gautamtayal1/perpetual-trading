@@ -7,7 +7,7 @@ services:
       - "8001:8001"
     restart: unless-stopped
     env_file:
-      - .env
+      - .env.prod
     
   postgres:
     image: postgres:latest
@@ -21,7 +21,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env.prod
 
   server:
     build:
@@ -38,7 +38,7 @@ services:
       - REDIS_URL=redis://redis-stack:6379
       - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
     env_file:
-      - .env
+      - .env.prod
 
   web: 
     build:
@@ -53,7 +53,7 @@ services:
       - REDIS_URL=redis://redis-stack:6379
       - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
     env_file:
-      - .env 
+      - .env.prod
 
   queue:
     build:
@@ -66,7 +66,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_URL=redis://redis-stack:6379
     env_file:
-      - .env 
+      - .env.prod
 
   archiver:
     build: 
@@ -81,7 +81,7 @@ services:
       - REDIS_URL=redis://redis-stack:6379
       - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
     env_file:
-      - .env 
+      - .env.prod
 
   wss:
     build:
@@ -93,8 +93,10 @@ services:
       - redis-stack
     environment:
       - REDIS_URL=redis://redis-stack:6379
+      - WSS_PORT=8081
+      - NEXT_PUBLIC_WSS_URL=ws://localhost:8081
     env_file:
-      - .env 
+      - .env.prod
 
   oracle:
     build:
@@ -107,7 +109,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_URL=redis://redis-stack:6379
     env_file:
-      - .env 
+      - .env.prod
 
   funding-schedular:
     build:
@@ -120,7 +122,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_URL=redis://redis-stack:6379
     env_file:
-      - .env 
+      - .env.prod
 
   position-liquidator:
     build:
@@ -133,7 +135,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_URL=redis://redis-stack:6379
     env_file:
-      - .env 
+      - .env.prod
 
 volumes:
   postgres_data:
