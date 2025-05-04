@@ -15,3 +15,5 @@ dist
 # Git
 .git
 .gitignore
+**/*.tsbuildinfo
+*/tsconfig.tsbuildinfo
