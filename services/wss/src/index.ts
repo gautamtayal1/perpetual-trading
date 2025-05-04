@@ -22,7 +22,7 @@ async function startWSS() {
     redisSub.on('error', err => console.error('Redis Error', err))
     await redisSub.connect()
 
-    ws.on('message', async raw => {
+    ws.on("message", async raw => {
       let msg: any
       try {
         msg = JSON.parse(raw.toString())

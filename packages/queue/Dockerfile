@@ -19,4 +19,4 @@ RUN pnpm --filter queue build
 
 WORKDIR /app/packages/queue
 
-CMD ["pnpm", "--filter", "queue", "start"]
+CMD ["pnpm", "start"]
