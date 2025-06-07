@@ -18,9 +18,9 @@ A full-stack, microservices-based perpetual futures trading platform built with 
   - **API Server** (`apps/server`): Express, Prisma ORM  
   - **WebSocket Server** (`services/wss`): WebSockets + Redis Pub/Sub  
   - **Engine** (`services/engine`): In-memory orderbook, matching logic  
-  - **Worker & Queues** (`packages/order-queue`): BullMQ, Redis  
+  - **Worker & Queues** (`packages/queue`): BullMQ, Redis  
   - **Archiver** (`services/archiver`): Persists trades/positions to PostgreSQL  
-  - **Frontend** (`apps/client`): Next.js, React, lightweight-charts  
+  - **Frontend** (`apps/web`): Next.js, React, lightweight-charts  
 - **Database**: PostgreSQL (via Prisma)  
 - **Cache & Message Bus**: Redis (Pub/Sub + BullMQ)  
 - **CI/CD**: GitHub Actions for build → Docker image → deploy to VPS/DigitalOcean  
