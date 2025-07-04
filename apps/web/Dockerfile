@@ -10,7 +10,7 @@ COPY pnpm-workspace.yaml ./
 COPY package.json ./
 COPY pnpm-lock.yaml ./
 COPY turbo.json ./
-COPY apps/web/.env.local ./app/apps/web
+COPY .env ./app/apps/web
 
 COPY . .
 
