@@ -10,7 +10,7 @@ import { useNextCutoffCountdown } from '../hooks/useNextCutOffCountdown';
 const ChartSection: React.FC = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('15m');
   const [activeView, setActiveView] = useState('Original');
-  const { isConnected, subscribe, unsubscribe } = useWebSocket(process.env.NEXT_PUBLIC_WS_URL!);
+  const { isConnected, subscribe, unsubscribe } = useWebSocket(process.env.NEXT_PUBLIC_WSS_URL!);
   const [markPrice, setMarkPrice] = useState(0);
   const [indexPrice, setIndexPrice] = useState(0);
   const [fundingRate, setFundingRate] = useState(0);
