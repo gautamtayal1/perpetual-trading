@@ -13,6 +13,8 @@ COPY . .
 
 RUN pnpm install --frozen-lockfile
 
-RUN pnpm --filter position-liquidator build 
+RUN pnpm --filter @repo/types build
+RUN pnpm --filter @repo/event-queue build
+RUN pnpm --filter @repo/position-liquidator build
 
-CMD ["pnpm", "--filter", "position-liquidator", "start"]
+CMD ["pnpm", "--filter", "@repo/position-liquidator", "start"]

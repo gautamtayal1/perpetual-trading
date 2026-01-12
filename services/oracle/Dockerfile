@@ -14,7 +14,8 @@ COPY . .
 RUN pnpm install --frozen-lockfile
 
 RUN pnpm --filter @repo/types build
+RUN pnpm --filter @repo/event-queue build
 RUN pnpm --filter @repo/engine build
-RUN pnpm --filter oracle build 
+RUN pnpm --filter @repo/oracle build
 
-CMD ["pnpm", "--filter", "oracle", "start"]
+CMD ["pnpm", "--filter", "@repo/oracle", "start"]

@@ -6,12 +6,6 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-COPY pnpm-workspace.yaml ./
-COPY package.json ./
-COPY pnpm-lock.yaml ./
-COPY turbo.json ./
-COPY .env ./app/apps/web
-
 COPY . .
 
 RUN pnpm install --frozen-lockfile

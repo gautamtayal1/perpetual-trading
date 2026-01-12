@@ -2,15 +2,15 @@
 import React from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
-const BinanceHeader: React.FC = () => {
+const Header: React.FC = () => {
   const { data: session } = useSession()
 
   return (
     <header className="flex items-center justify-between border-b border-[#2A2A2A] p-5 h-16">
       <div className="flex items-center">
         <a href="/" className="flex items-center">
-          <img src="https://public.bnbstatic.com/static/images/common/favicon.ico" alt="Binance" className="w-5 h-5 mr-2" />
-          <span className="text-[#F0B90B] font-medium">BINANCE &nbsp;FUTURES</span>
+          <span className="text-[#F0B90B] font-medium">PERPETUAL</span>
+          <span className="text-white font-medium">&nbsp;FUTURES</span>
         </a>
       </div>
 
@@ -43,4 +43,4 @@ const BinanceHeader: React.FC = () => {
   );
 };
 
-export default BinanceHeader;
+export default Header;

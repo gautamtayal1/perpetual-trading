@@ -12,9 +12,9 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY . .
 
 RUN pnpm install --frozen-lockfile
-RUN pnpm --filter db build
-RUN pnpm --filter db exec prisma generate
+RUN pnpm --filter @repo/db exec prisma generate
+RUN pnpm --filter @repo/db build
+RUN pnpm --filter @repo/types build
+RUN pnpm --filter @repo/archiver build
 
-RUN pnpm --filter archiver build 
-
-CMD ["pnpm", "--filter", "archiver", "start"]
+CMD ["pnpm", "--filter", "@repo/archiver", "start"]

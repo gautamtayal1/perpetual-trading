@@ -1,5 +1,5 @@
 import React from 'react';
-import BinanceHeader from '../components/Header';
+import Header from '../components/Header';
 import MarketTabs from '../components/MarketTabs';
 import ChartSection from '../components/ChartSection';
 import OrderBook from '../components/OrderBook';
@@ -10,7 +10,7 @@ const BtcusdtTradingPage: React.FC = () => {
     <div>
       <div className="h-screen flex flex-col overflow-hidden bg-[#0B0B0B] text-white">
         {/* Header */}
-        <BinanceHeader />
+        <Header />
         <MarketTabs />
         
         {/* Trading Container */}

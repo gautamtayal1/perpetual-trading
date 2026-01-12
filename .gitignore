@@ -26,6 +26,10 @@ coverage
 out/
 build
 dist
+*.tsbuildinfo
+
+# Production env (contains secrets)
+.env.prod
 
 
 # Debug

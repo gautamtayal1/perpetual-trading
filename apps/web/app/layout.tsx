@@ -13,7 +13,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Binance",
+  title: "Perpetual Futures",
   description: "Perpetual Futures Trading",
 };
 

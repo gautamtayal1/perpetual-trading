@@ -13,6 +13,7 @@ COPY . .
 
 RUN pnpm install --frozen-lockfile
 
-RUN pnpm --filter funding-schedular build 
+RUN pnpm --filter @repo/event-queue build
+RUN pnpm --filter @repo/funding-schedular build
 
-CMD ["pnpm", "--filter", "funding-schedular", "start"]
+CMD ["pnpm", "--filter", "@repo/funding-schedular", "start"]

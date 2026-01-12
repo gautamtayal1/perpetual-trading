@@ -50,7 +50,7 @@ services:
     depends_on:
       - server
     environment:
-      - NEXT_PUBLIC_API_URL=http://34.16.119.179:8080
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
       - REDIS_URL=redis://redis-stack:6379
       - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
     env_file:
@@ -95,7 +95,7 @@ services:
     environment:
       - REDIS_URL=redis://redis-stack:6379
       - WSS_PORT=8081
-      - NEXT_PUBLIC_WSS_URL=ws://34.16.119.179:8081
+      - NEXT_PUBLIC_WSS_URL=${NEXT_PUBLIC_WSS_URL:-ws://localhost:8081}
     env_file:
       - .env.prod
 

@@ -68,8 +68,8 @@ const Auth: React.FC = () => {
       >
         <div className="text-center mb-8">
           <h2 className="font-display text-3xl font-bold mb-2">
-            <span className="text-yellow-500">BINANCE</span>
-            <span className="text-white">FUTURES</span>
+            <span className="text-yellow-500">PERPETUAL</span>
+            <span className="text-white ml-2">FUTURES</span>
           </h2>
           <p className="text-gray-400">Access your trading account</p>
         </div>
