@@ -4,7 +4,7 @@
 # Run this on the VM after first deployment
 
 DOMAIN="perps.gautamtayal.com"
-EMAIL="admin@gautamtayal.com"  # Change this to your email
+EMAIL="gautamtayal65@gmail.com"  # Change this to your email
 
 # Step 1: Use initial nginx config (HTTP only)
 echo "Setting up initial nginx config for SSL certificate generation..."
