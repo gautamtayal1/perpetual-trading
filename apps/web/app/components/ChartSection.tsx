@@ -19,7 +19,7 @@ const ChartSection: React.FC = () => {
 
   const handlePricesUpdate = useCallback((data: any) => {
     console.log("data", data);
-    const parsedData = JSON.parse(data.data);
+    const parsedData = JSON.parse(data);
     const markPrice = parsedData.m.toFixed(1);
     const indexPrice = parsedData.i.toFixed(1);
     const fundingRate = (parsedData.r * 100).toFixed(4);

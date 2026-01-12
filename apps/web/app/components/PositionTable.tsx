@@ -43,7 +43,7 @@ const PositionsTable: React.FC = () => {
   }, [userId]);
 
   const handleFundingRateUpdate = useCallback((data: any) => {
-    setMarkPrice(data.data.markPrice.toFixed(1));
+    setMarkPrice(data.markPrice.toFixed(1));
   }, []);
 
   useEffect(() => {

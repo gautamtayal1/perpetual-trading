@@ -38,7 +38,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       try {
         const msg = JSON.parse(e.data);
         if (msg.stream && handlers.current.has(msg.stream)) {
-          handlers.current.get(msg.stream)?.forEach((handler) => handler(msg));
+          handlers.current.get(msg.stream)?.forEach((handler) => handler(msg.data));
         }
       } catch {
         // ignore parse errors
