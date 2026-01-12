@@ -3,17 +3,16 @@ services:
     image: redis/redis-stack:latest
     command:
       ["redis-server", "--replicaof", "no", "one", "--protected-mode", "no"]
-    ports:
-      - "6379:6379"
-      - "8001:8001"
+    expose:
+      - "6379"
     restart: unless-stopped
     env_file:
       - .env.prod
 
   postgres:
     image: postgres:16
-    ports:
-      - "5441:5432"
+    expose:
+      - "5432"
     restart: unless-stopped
     environment:
       POSTGRES_USER: user
@@ -48,8 +47,8 @@ services:
       args:
         NEXT_PUBLIC_API_URL: http://68.183.80.81:8080
         NEXT_PUBLIC_WSS_URL: ws://68.183.80.81:8081
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     depends_on:
       - server
     environment:
@@ -139,6 +138,26 @@ services:
       - REDIS_URL=redis://redis-stack:6379
     env_file:
       - .env.prod
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 volumes:
   postgres_data:
