@@ -27,8 +27,8 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     depends_on:
       - redis-stack
       - postgres
@@ -89,8 +89,8 @@ services:
     build:
       context: .
       dockerfile: services/wss/Dockerfile
-    ports:
-      - "8081:8081"
+    expose:
+      - "8081"
     depends_on:
       - redis-stack
     environment:
@@ -150,6 +150,8 @@ services:
       - ./certbot/www:/var/www/certbot:ro
     depends_on:
       - web
+      - server
+      - wss
     restart: unless-stopped
 
   certbot:
