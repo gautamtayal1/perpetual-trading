@@ -39,6 +39,9 @@ const OrderBook = () => {
         setBids(data.data.b);
       });
     }
+    return () => {
+      unsubscribe("depth:update");
+    };
   }, [isConnected, subscribe, unsubscribe]);
   
   return (

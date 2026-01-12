@@ -31,6 +31,9 @@ const ChartSection: React.FC = () => {
         setFundingRate(Number(fundingRate));
       });
     }
+    return () => {
+      unsubscribe("prices:update");
+    };
   }, [isConnected, subscribe, unsubscribe]);
 
   return (

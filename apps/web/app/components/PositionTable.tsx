@@ -46,6 +46,9 @@ const PositionsTable: React.FC = () => {
         setMarkPrice(data.markPrice.toFixed(1));
       });
     }
+    return () => {
+      unsubscribe("fundingRate:update");
+    };
   }, [isConnected, subscribe, unsubscribe]);
   
   const handleCancelOrder = async (id: string, entryPrice: number, quantity: number, side: string, executedQty: number) => {
