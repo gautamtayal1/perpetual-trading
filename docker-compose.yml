@@ -11,7 +11,7 @@ services:
       - .env.prod
 
   postgres:
-    image: postgres:latest
+    image: postgres:16
     ports:
       - "5441:5432"
     restart: unless-stopped
@@ -45,12 +45,14 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
+        - NEXT_PUBLIC_WSS_URL=${NEXT_PUBLIC_WSS_URL:-ws://localhost:8081}
     ports:
       - "3000:3000"
     depends_on:
       - server
     environment:
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
       - REDIS_URL=redis://redis-stack:6379
       - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
     env_file:
