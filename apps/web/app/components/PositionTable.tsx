@@ -2,8 +2,8 @@
 
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
-import { useWebSocket } from '../hooks/useWebSocket';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useWebSocketContext } from '../context/WebSocketContext';
 
 interface Position {
   id: string;
@@ -21,10 +21,11 @@ const PositionsTable: React.FC = () => {
   const userId = session?.user?.id;
   const [position, setPosition] = React.useState<Position | null>(null);
   const [orders, setOrders] = React.useState([]);
-  const { isConnected, subscribe, unsubscribe } = useWebSocket(`${process.env.NEXT_PUBLIC_WSS_URL}`);
+  const { isConnected, subscribe, unsubscribe } = useWebSocketContext();
   const [markPrice, setMarkPrice] = useState(0);
-  
+
   useEffect(() => {
+    if (!userId) return;
     const fetchPosition = async () => {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/position/${userId}`);
       setPosition(response.data);
@@ -33,6 +34,7 @@ const PositionsTable: React.FC = () => {
   }, [userId]);
 
   useEffect(() => {
+    if (!userId) return;
     const fetchOrders = async () => {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/order/${userId}`);
       setOrders(response.data);
@@ -40,16 +42,18 @@ const PositionsTable: React.FC = () => {
     fetchOrders();
   }, [userId]);
 
+  const handleFundingRateUpdate = useCallback((data: any) => {
+    setMarkPrice(data.data.markPrice.toFixed(1));
+  }, []);
+
   useEffect(() => {
     if (isConnected) {
-      subscribe("fundingRate:update", (data) => {
-        setMarkPrice(data.markPrice.toFixed(1));
-      });
+      subscribe("fundingRate:update", handleFundingRateUpdate);
     }
     return () => {
       unsubscribe("fundingRate:update");
     };
-  }, [isConnected, subscribe, unsubscribe]);
+  }, [isConnected, subscribe, unsubscribe, handleFundingRateUpdate]);
   
   const handleCancelOrder = async (id: string, entryPrice: number, quantity: number, side: string, executedQty: number) => {
     await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/create`, {

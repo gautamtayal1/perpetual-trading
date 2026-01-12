@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import LightweightCandlestickChart from './TradingViewChart';
-import { useWebSocket } from '../hooks/useWebSocket';
+import { useWebSocketContext } from '../context/WebSocketContext';
 const timeframes = ['15m', '1H', '4H', '1D', '1W'];
 const viewTypes = ['Original', 'Trading View', 'Depth'];
 import { useNextCutoffCountdown } from '../hooks/useNextCutOffCountdown';
@@ -10,31 +10,33 @@ import { useNextCutoffCountdown } from '../hooks/useNextCutOffCountdown';
 const ChartSection: React.FC = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('15m');
   const [activeView, setActiveView] = useState('Original');
-  const { isConnected, subscribe, unsubscribe } = useWebSocket(process.env.NEXT_PUBLIC_WSS_URL!);
+  const { isConnected, subscribe, unsubscribe } = useWebSocketContext();
   const [markPrice, setMarkPrice] = useState(0);
   const [indexPrice, setIndexPrice] = useState(0);
   const [fundingRate, setFundingRate] = useState(0);
   const { hours, minutes, seconds } = useNextCutoffCountdown()
   const pad = (n: number) => n.toString().padStart(2, '0')
 
+  const handlePricesUpdate = useCallback((data: any) => {
+    console.log("data", data);
+    const parsedData = JSON.parse(data.data);
+    const markPrice = parsedData.m.toFixed(1);
+    const indexPrice = parsedData.i.toFixed(1);
+    const fundingRate = (parsedData.r * 100).toFixed(4);
+    setMarkPrice(Number(markPrice));
+    setIndexPrice(Number(indexPrice));
+    setFundingRate(Number(fundingRate));
+  }, []);
+
   useEffect(() => {
     console.log("isConnected1", isConnected);
     if (isConnected) {
-      subscribe("prices:update", (data) => {
-        console.log("data", data);
-        const parsedData = JSON.parse(data);
-        const markPrice = parsedData.m.toFixed(1);
-        const indexPrice = parsedData.i.toFixed(1);
-        const fundingRate = (parsedData.r * 100).toFixed(4);
-        setMarkPrice(Number(markPrice));
-        setIndexPrice(Number(indexPrice));
-        setFundingRate(Number(fundingRate));
-      });
+      subscribe("prices:update", handlePricesUpdate);
     }
     return () => {
       unsubscribe("prices:update");
     };
-  }, [isConnected, subscribe, unsubscribe]);
+  }, [isConnected, subscribe, unsubscribe, handlePricesUpdate]);
 
   return (
     <div className="w-4/5 border-r border-[#2A2A2A] flex flex-col overflow-hidden">

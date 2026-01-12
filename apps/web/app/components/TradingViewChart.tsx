@@ -28,6 +28,13 @@ export default function LightweightCandlestickChart({
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const [scriptLoaded, setScriptLoaded] = useState(false)
 
+  // Check if script is already loaded on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.LightweightCharts) {
+      setScriptLoaded(true)
+    }
+  }, [])
+
   useEffect(() => {
     if (!scriptLoaded || !chartContainerRef.current) return
     

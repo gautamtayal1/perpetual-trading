@@ -23,7 +23,7 @@ const BtcusdtTradingPage: React.FC = () => {
             {/* Order Book & Trades Panel */}
             <div className="flex-1 flex flex-col overflow-hidden">
               {/* OrderBook with OrderEntry integrated inside */}
-              <div className="h-[100vh] overflow-hidden mb-1">
+              <div className="h-full overflow-hidden">
                 <OrderBook />
               </div>
               

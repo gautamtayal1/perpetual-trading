@@ -1,0 +1,127 @@
+services:
+  redis-stack:
+    image: redis/redis-stack:latest
+    command:
+      ["redis-server", "--replicaof", "no", "one", "--protected-mode", "no"]
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    ports:
+      - "5441:5432"
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis-stack
+      - postgres
+    environment:
+      - REDIS_HOST=redis-stack
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis-stack:6379
+      - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080
+        NEXT_PUBLIC_WSS_URL: ws://localhost:8081
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    environment:
+      - REDIS_URL=redis://redis-stack:6379
+      - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=k8X2mP9vR4nL7qY1wZ6jF3hA0cB5dE8gT2uI9oS4xV7n
+
+  queue:
+    build:
+      context: .
+      dockerfile: packages/queue/Dockerfile
+    depends_on:
+      - redis-stack
+    environment:
+      - REDIS_HOST=redis-stack
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis-stack:6379
+
+  archiver:
+    build:
+      context: .
+      dockerfile: services/archiver/Dockerfile
+    depends_on:
+      - redis-stack
+      - postgres
+    environment:
+      - REDIS_HOST=redis-stack
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis-stack:6379
+      - DATABASE_URL=postgresql://user:password@postgres:5432/postgres?schema=public
+
+  wss:
+    build:
+      context: .
+      dockerfile: services/wss/Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis-stack
+    environment:
+      - REDIS_URL=redis://redis-stack:6379
+      - WSS_PORT=8081
+      - NEXT_PUBLIC_WSS_URL=ws://localhost:8081
+
+  oracle:
+    build:
+      context: .
+      dockerfile: services/oracle/Dockerfile
+    depends_on:
+      - redis-stack
+    environment:
+      - REDIS_HOST=redis-stack
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis-stack:6379
+
+  funding-schedular:
+    build:
+      context: .
+      dockerfile: services/funding-schedular/Dockerfile
+    depends_on:
+      - redis-stack
+    environment:
+      - REDIS_HOST=redis-stack
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis-stack:6379
+
+  position-liquidator:
+    build:
+      context: .
+      dockerfile: services/position-liquidator/Dockerfile
+    depends_on:
+      - redis-stack
+    environment:
+      - REDIS_HOST=redis-stack
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis-stack:6379
+      - NEXT_PUBLIC_API_URL=http://server:8080
+
+volumes:
+  postgres_data:
