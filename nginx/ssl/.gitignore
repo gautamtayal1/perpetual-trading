@@ -1,0 +1,4 @@
+# Ignore actual certificate files (these should never be in git)
+*.pem
+*.key
+*.crt
